@@ -16,6 +16,11 @@ class Piece
   def inspect
     @name
   end
+
+  def valid_move?(pos)
+    Board.in_bounds?(pos) && @board[pos].color != self.color
+
+  end
 end
 
 module Slideable
@@ -31,9 +36,8 @@ module Slideable
           loop do
             x += dx
             y += dy
-            pos = [x, y]
-            break unless Board.in_bounds?(pos)
-            break if @board[pos].color == self.color
+            new_pos = [x, y]
+            break unless self.valid_move?(new_pos)
             moves << [x, y]
           end
         end
@@ -41,8 +45,23 @@ module Slideable
     end
 
     if self.move_dirs.include?(:hor_vert)
-
-
+      # debugger
+      [1, -1].each do |mvmt|
+        x, y = @pos
+        loop do
+          x += mvmt
+          new_pos = [x, y]
+          break unless self.valid_move?(new_pos)
+          moves << new_pos
+        end
+        x = @pos[0]
+        loop do
+          y += mvmt
+          new_pos = [x, y]
+          break unless self.valid_move?(new_pos)
+          moves << new_pos
+        end
+      end
     end
 
     moves.uniq
@@ -76,6 +95,7 @@ class Bishop < Piece
 end
 
 class Queen < Piece
+  include Slideable
   def initialize(board, start_pos, color)
     @name = 'Q'
     super
