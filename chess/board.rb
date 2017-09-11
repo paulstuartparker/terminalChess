@@ -13,12 +13,14 @@ class Board
     null = NullPiece.instance
     raise InvalidMoveError.new("nothing to move") if self[start_pos].class == NullPiece
     raise InvalidMoveError.new("start and end are the same") if start_pos == end_pos
-
+    raise InvalidMoveError.new("illegal move") unless self[start_pos].moves.include?(end_pos)
     #TODO once we have pieces implemented: check if move valid
     # if board[end_pos] is invalid
     #   raise InvalidMoveError("")
     # end
+    self[start_pos].pos = end_pos
     self[end_pos], self[start_pos] = self[start_pos], null
+
   end
 
   def []=(pos, piece)
