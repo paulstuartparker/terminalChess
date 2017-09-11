@@ -1,4 +1,17 @@
+
 module Steppable
+  def moves
+
+    if self.move_type.include?(:knight)
+      x, y = pos
+      arr = [-2,-1,1,2]
+      movements = arr.product(arr).reject { |a, b| a.abs == b.abs }
+      moves = movements.map { |a, b| [x+a, y+b] }
+
+      return moves.select { |move| self.valid_move?(move) }
+    end
+  end
+
 
 end
 

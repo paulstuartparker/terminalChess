@@ -22,7 +22,6 @@ class Piece
 
   def valid_move?(pos)
     Board.in_bounds?(pos) && @board[pos].color != self.color
-
   end
 end
 
