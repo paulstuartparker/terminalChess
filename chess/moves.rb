@@ -10,6 +10,34 @@ module Steppable
 
       return moves.select { |move| self.valid_move?(move) }
     end
+
+    if self.move_type.include?(:king)
+      x, y = pos
+      arr = [-1, 0, 1]
+      movements = arr.product(arr)
+      moves = movements.map { |a, b| [x+a, y+b] }
+      return moves.select { |move| self.valid_move?(move) }
+    end
+
+    if self.move_type.include?(:pawn)
+      x, y = pos
+      direction = self.color == :b ? 1 : -1
+      new_x = x + direction
+      new_pos = [new_x, y]
+      #don't forget pawn first move
+      moves = [new_pos]
+      [-1, 1].each do |dy|
+        new_pos = [new_x, y + dy]
+        if !@board[new_pos].color.nil? && @board[new_pos].color != self.color
+          moves << new_pos
+        end
+      end
+      moves
+    end
+
+
+
+
   end
 
 
