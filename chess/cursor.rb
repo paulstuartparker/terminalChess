@@ -95,8 +95,6 @@ class Cursor
     dx, dy = diff
     if Board.in_bounds?([x + dx, y + dy])
       @cursor_pos = [x + dx, y + dy]
-    else
-      #raise something
     end
 
   end
