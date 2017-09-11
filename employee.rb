@@ -38,17 +38,14 @@ class Manager < Employee
 
   def sub_employees
     sub_array = []
-    if self.class == Employee
-      return []
-    else
-      self.employees.each do |employee|
-        if employee.class == Manager
-          sub_array << employee.sub_employees
-        end
-        sub_array << employee
+    self.employees.each do |employee|
+      if employee.class == Manager
+        sub_array << employee.sub_employees
+      end
+      sub_array << employee
 
       end
-    end
+    # end
     sub_array.flatten
   end
 
