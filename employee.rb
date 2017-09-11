@@ -45,7 +45,6 @@ class Manager < Employee
       sub_array << employee
 
       end
-    # end
     sub_array.flatten
   end
 
