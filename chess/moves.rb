@@ -1,4 +1,4 @@
-
+require "byebug"
 module Steppable
   def moves
 
@@ -20,19 +20,30 @@ module Steppable
     end
 
     if self.move_type.include?(:pawn)
+
       x, y = pos
       direction = self.color == :black ? 1 : -1
       new_x = x + direction
       new_pos = [new_x, y]
       #TODO: pawn first move
+
       moves = [new_pos]
       #check diagonals for capturable
       [-1, 1].each do |dy|
         new_pos = [new_x, y + dy]
-        if !@board[new_pos].color.nil?# && @board[new_pos].color != self.color
+        if new_pos.any? { |n| n < 0 || n > 7}
+          next
+        end
+        # debugger
+        unless @board[new_pos].color.nil?# && @board[new_pos].color != self.color
           moves << new_pos
         end
       end
+      if x == 1 || x == 6 #pawn hasn't moved from start row
+        new_x += direction
+        moves << [new_x, y]
+      end
+
       moves.select { |move| self.valid_move?(move) }
     end
 
@@ -60,6 +71,7 @@ module Slideable
             new_pos = [x, y]
             break unless self.valid_move?(new_pos)
             moves << [x, y]
+            break unless self.board[new_pos].class == NullPiece
           end
         end
       end
@@ -73,6 +85,7 @@ module Slideable
           new_pos = [x, y]
           break unless self.valid_move?(new_pos)
           moves << new_pos
+          break unless self.board[new_pos].class == NullPiece
         end
         x = @pos[0]
         loop do
@@ -80,6 +93,7 @@ module Slideable
           new_pos = [x, y]
           break unless self.valid_move?(new_pos)
           moves << new_pos
+          break unless self.board[new_pos].class == NullPiece
         end
       end
     end

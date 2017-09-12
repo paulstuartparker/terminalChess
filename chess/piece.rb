@@ -19,15 +19,17 @@ class Piece
   end
 
   def move_into_check?(end_pos)
+    # debugger
     future = @board.dup
-    future.move_piece(@pos, end_pos)
+    future.move_piece!(@pos, end_pos)
     future.in_check?(@color)
   end
 
 
+
   def to_s
-    # " #{@unicode} "
-    @name
+    " #{@unicode} "
+    # @name
   end
 
   def inspect
@@ -35,7 +37,11 @@ class Piece
   end
 
   def valid_move?(pos)
-    Board.in_bounds?(pos) && @board[pos].color != self.color && !self.move_into_check(pos)
+    Board.in_bounds?(pos) && @board[pos].color != self.color
+  end
+
+  def valid_moves
+    self.moves.reject{ |move| self.move_into_check?(move) }
   end
 end
 
@@ -126,6 +132,7 @@ class Pawn < Piece
   def move_type
     [:pawn]
   end
+
 end
 
 
@@ -135,6 +142,7 @@ class NullPiece < Piece
   include Singleton
   def initialize
     @unicode = " "
+    @name = "_"
     @color = nil
   end
 

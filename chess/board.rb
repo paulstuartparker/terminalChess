@@ -22,6 +22,7 @@ class Board
     @grid.each do |row|
       row.each do |piece|
         next if piece.class == NullPiece
+        # debugger
         piece.dup(new_board)
       end
     end
@@ -78,7 +79,8 @@ class Board
   end
 
   def checkmate?(color)
-
+    my_pieces = @grid.flatten.select { |piece| piece.color == color }
+    self.in_check?(color) && my_pieces.all? { |piece| piece.valid_moves.empty? }
   end
 
 
@@ -87,11 +89,20 @@ class Board
     null = NullPiece.instance
     raise InvalidMoveError.new("nothing to move") if self[start_pos].class == NullPiece
     raise InvalidMoveError.new("start and end are the same") if start_pos == end_pos
-    raise InvalidMoveError.new("illegal move") unless self[start_pos].moves.include?(end_pos)
+    raise InvalidMoveError.new("illegal move") unless self[start_pos].valid_moves.include?(end_pos)
+    raise InvalidMoveError.new("would move into check") if self[start_pos].move_into_check?(end_pos)
     #TODO once we have pieces implemented: check if move valid
     # if board[end_pos] is invalid
     #   raise InvalidMoveError("")
     # end
+    self.move_piece!(start_pos, end_pos)
+
+  end
+
+#move piece without checking if move is valid
+  def move_piece!(start_pos, end_pos)
+    null = NullPiece.instance
+    # debugger
     if self[start_pos].class == King
       if self[start_pos].color == :black
         @black_king_pos = end_pos
@@ -101,7 +112,6 @@ class Board
     end
     self[start_pos].pos = end_pos
     self[end_pos], self[start_pos] = self[start_pos], null
-
   end
 
 
@@ -123,10 +133,11 @@ class Board
   end
 
   def inspect
-    b_str = "\n"
-    @grid.each do |row|
+    b_str = "\n  a  b  c  d  e  f  g  h \n"
+    @grid.each_with_index do |row, i|
+      b_str += "#{8 - i} "
       row.each do |piece|
-        b_str += "#{piece.to_s} "
+        b_str += "#{piece.inspect}  "
       end
       b_str += "\n"
     end
