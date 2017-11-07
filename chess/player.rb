@@ -1,5 +1,5 @@
 require_relative "display"
-
+require_relative "moves"
 class HumanPlayer
   attr_reader :name, :color
   def initialize(name, display, color)

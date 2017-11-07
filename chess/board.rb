@@ -22,7 +22,6 @@ class Board
     @grid.each do |row|
       row.each do |piece|
         next if piece.class == NullPiece
-        # debugger
         piece.dup(new_board)
       end
     end
@@ -73,9 +72,12 @@ class Board
     @grid.any? do |rows|
       rows.any? do |piece|
         next if piece.class == NullPiece
-        piece.moves.include?(king_pos)
+        if piece.moves.include?(king_pos)
+          return piece.pos
+        end
       end
     end
+    false
   end
 
   def checkmate?(color)
@@ -86,8 +88,10 @@ class Board
 
 
   def move_piece(start_pos, end_pos)
+    # debugger
     null = NullPiece.instance
     raise InvalidMoveError.new("nothing to move") if self[start_pos].class == NullPiece
+    # debugger
     raise InvalidMoveError.new("start and end are the same") if start_pos == end_pos
     raise InvalidMoveError.new("illegal move") unless self[start_pos].valid_moves.include?(end_pos)
     raise InvalidMoveError.new("would move into check") if self[start_pos].move_into_check?(end_pos)
@@ -123,6 +127,7 @@ class Board
   end
 
   def [](pos)
+    # debugger
     x, y = pos
     @grid[x][y]
   end
