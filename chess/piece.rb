@@ -50,7 +50,7 @@ class Rook < Piece
   include Slideable
   def initialize(board, start_pos, color)
     @name = 'r'
-    @unicode = color == :white ? "\u265C" : "\u2656"
+    @unicode = color == :black ? "\u265C" : "\u2656"
     super
   end
 
@@ -64,7 +64,7 @@ class Bishop < Piece
   include Slideable
   def initialize(board, start_pos, color)
     @name = 'b'
-    @unicode = color == :white ? "\u265D" : "\u2657"
+    @unicode = color == :black ? "\u265D" : "\u2657"
     super
   end
 
@@ -77,7 +77,7 @@ class Queen < Piece
   include Slideable
   def initialize(board, start_pos, color)
     @name = 'Q'
-    @unicode = color == :white ? "\u265B" : "\u2655"
+    @unicode = color == :black ? "\u265B" : "\u2655"
     super
   end
 
@@ -91,7 +91,7 @@ class Knight < Piece
   include Steppable
   def initialize(board, start_pos, color)
     @name = 'n'
-    @unicode = color == :white ? "\u265E" : "\u2658"
+    @unicode = color == :black ? "\u265E" : "\u2658"
 
     super
   end
@@ -105,7 +105,7 @@ class King < Piece
   include Steppable
   def initialize(board, start_pos, color)
     @name = 'K'
-    @unicode = color == :white ? "\u265A" : "\u2654"
+    @unicode = color == :black ? "\u265A" : "\u2654"
     super
     if color == :black
       @board.black_king_pos = start_pos
@@ -124,7 +124,7 @@ class Pawn < Piece
   include Steppable
   def initialize(board, start_pos, color)
     @name = 'p'
-    @unicode = color == :white ? "\u265F" : "\u2659"
+    @unicode = color == :black ? "\u265F" : "\u2659"
 
     super
   end

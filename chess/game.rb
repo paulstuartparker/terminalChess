@@ -1,5 +1,6 @@
 require_relative "display"
 require_relative "player"
+
 class ChessGame
   def initialize
     @board = Board.new
