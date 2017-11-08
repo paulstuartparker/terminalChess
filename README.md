@@ -3,7 +3,7 @@
 Terminal Chess is a fully functional command line chess application written in Ruby.
 The game logic is implemented using two modules: slideable and steppable, which extened the piece classes. 
 
-[terminal chess](https://github.com/paulstuartparker/terminalChess/blob/master/Screen%20Shot%202017-11-07%20at%2011.03.40%20PM.png)
+![terminal chess](https://github.com/paulstuartparker/terminalChess/blob/master/Screen%20Shot%202017-11-07%20at%2011.03.40%20PM.png)
 
 Currently there is a very weak AI implemented which will take the most valuable piece available to it at any given time,
 and it will also move out of check when threatened.  
