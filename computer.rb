@@ -22,9 +22,11 @@ class ComputerPlayer
     my_grid = @board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == @color }
     all_moves = find_all_moves(pieces)
-    # move = calculate_best_move(all_moves)
-    move = search_tree_for_move(pieces, 4, @board)
+    move = calculate_best_move(all_moves)
+    # move = search_tree_for_move(@board, 2, computer)
+
     # move = pick_random_move(all_moves)
+
     return move
   end
 
@@ -51,24 +53,43 @@ class ComputerPlayer
     moves.select { |move| move[1].include?(threat)}
   end
 
-  def search_tree_for_move(depth, board, computer)
+
+  def search_tree_for_move(board, depth, computer = true)
     if depth == 0
       return evaluate_board(board)
     end
-    depth = 4
-    moves = find_all_moves(pieces)
     if computer
+      #
       best_move = -9999
       pieces = board.grid.flatten.select { |piece| piece.color == @color }
+      moves = find_all_moves(pieces)
       moves.each do |move_arr|
         start = move_arr[0]
         move_arr[1].each do |move|
-        future = board.dup
-        
-
-
+          future = board.deep_dup
+          if
+          future.move_piece!(start, move)
+          # newval = [evaluate_board(future), [start, move]]
+          tree_val = search_tree_for_move(future, depth - 1, !computer)
+          best_move = (tree_val > best_move) ? tree_val : best_move
+        end
+      end
+      return best_move
     else
-      pieces = board.grid.flatten.select { |piece| piece.color != @color }
+      best_move = 9999
+      pieces = board.grid.flatten.select { |piece| piece.color != @color && piece.color != nil }
+      #
+      moves = find_all_moves(pieces)
+      moves.each do |move_arr|
+        start = move_arr[0]
+        move_arr[1].each do |move|
+          future = board.deep_dup
+          future.move_piece!(start, move)
+          tree_val = search_tree_for_move(future, depth - 1, computer)
+          best_move = (tree_val < best_move) ? tree_val : best_move
+        end
+      end
+      return best_move
     end
   end
 
@@ -79,18 +100,21 @@ class ComputerPlayer
     end
     best_value = -9999
     best_move = nil
+    # boardval = nil
     moves.each do |move_arr|
       start = move_arr[0]
       move_arr[1].each do |move|
-        future = @board.dup
+        future = @board.deep_dup
         future.move_piece!(start, move)
-        boardval = evaluate_board(future)
+        boardval = search_tree_for_move(future, 2, nil)
+        # debugger
         if (boardval > best_value )
           best_move = [start, move]
+          best_value = boardval
         end
       end
     end
-    # debugger
+
     return best_move
 
   end
@@ -99,14 +123,14 @@ class ComputerPlayer
   def evaluate_board(future)
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
     boardval = pieces.reduce(0) do |acc, el|
-      # debugger
+      #
       if el.color == @color
         acc += PIECE_VALUES[el.class]
       else
         acc -= PIECE_VALUES[el.class]
       end
     end
-    # debugger
+    #
     return boardval
   end
 end

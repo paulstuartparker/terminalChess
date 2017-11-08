@@ -34,7 +34,7 @@ module Steppable
         if new_pos.any? { |n| n < 0 || n > 7}
           next
         end
-        # debugger
+        # 
         unless @board[new_pos].color.nil?# && @board[new_pos].color != self.color
           moves << new_pos
         end

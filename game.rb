@@ -16,10 +16,12 @@ class ChessGame
     until @board.checkmate?(:white) || @board.checkmate?(:black)
       begin
         start_pos, end_pos = @active_player.play_turn
+
         if @board[start_pos].color && @board[start_pos].color != @active_player.color
-          raise InvalidMoveError.new("not your turn")
+          raise InvalidMoveError.new("not your piece")
         end
-        @board.move_piece(start_pos, end_pos)
+
+        @board.move_piece!(start_pos, end_pos)
       rescue InvalidMoveError => e
           puts e.message
           retry

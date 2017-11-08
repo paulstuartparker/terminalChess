@@ -4,8 +4,8 @@ end
 require_relative "piece"
 
 class Board
-  attr_reader :grid
-  attr_accessor :black_king_pos, :white_king_pos
+  # attr_reader :grid
+  attr_accessor :black_king_pos, :white_king_pos, :grid
   def initialize(empty = false)
     @grid = Array.new(8) { Array.new(8) { NullPiece.instance } }
     unless empty
@@ -17,15 +17,30 @@ class Board
     end
   end
 
-  def dup
-    new_board = Board.new(true)
-    @grid.each do |row|
-      row.each do |piece|
-        next if piece.class == NullPiece
-        piece.dup(new_board)
-      end
-    end
-    new_board
+  def deep_dup
+    # new_board = Board.new
+    # grid = []
+    # 0.upto(7) do |row|
+    #   sub_arr = []
+    #   0.upto(7) do |col|
+    #     if self[[row, col]].is_a? NullPiece
+    #       sub_arr << NullPiece.instance
+    #     else
+    #       #
+    #       piece = self[[row, col]]
+    #       piece_class = piece.class
+    #       new_piece = piece_class.new(piece.board, piece.pos, piece.color)
+    #       # new_piece.color = piece.color
+    #       # new_piece.pos = [row, col]
+    #       # new_piece.board = new_board
+    #       sub_arr << new_piece
+    #     end
+    #   end
+    #   grid << sub_arr
+    # end
+    # new_board.grid = grid
+    # new_board
+    new_board = Marshal.load(Marshal.dump(self))
   end
 
 
@@ -88,10 +103,10 @@ class Board
 
 
   def move_piece(start_pos, end_pos)
-    # debugger
+    #
     null = NullPiece.instance
     raise InvalidMoveError.new("nothing to move") if self[start_pos].class == NullPiece
-    # debugger
+    #
     raise InvalidMoveError.new("start and end are the same") if start_pos == end_pos
     raise InvalidMoveError.new("illegal move") unless self[start_pos].valid_moves.include?(end_pos)
     raise InvalidMoveError.new("would move into check") if self[start_pos].move_into_check?(end_pos)
@@ -100,13 +115,12 @@ class Board
     #   raise InvalidMoveError("")
     # end
     self.move_piece!(start_pos, end_pos)
-
   end
 
 #move piece without checking if move is valid
   def move_piece!(start_pos, end_pos)
     null = NullPiece.instance
-    # debugger
+    #
     if self[start_pos].class == King
       if self[start_pos].color == :black
         @black_king_pos = end_pos
@@ -127,7 +141,7 @@ class Board
   end
 
   def [](pos)
-    # debugger
+    #
     x, y = pos
     @grid[x][y]
   end
