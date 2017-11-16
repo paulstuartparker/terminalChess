@@ -22,8 +22,8 @@ class ComputerPlayer
     my_grid = @board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == @color }
     all_moves = find_all_moves(pieces)
-    # move = calculate_best_move(all_moves)
-    move = search_tree_for_move(pieces, 4, @board)
+    move = calculate_best_move(all_moves)
+    # move = search_tree_for_move(pieces, 4, @board)
     # move = pick_random_move(all_moves)
     return move
   end
@@ -51,26 +51,26 @@ class ComputerPlayer
     moves.select { |move| move[1].include?(threat)}
   end
 
-  def search_tree_for_move(depth, board, computer)
-    if depth == 0
-      return evaluate_board(board)
-    end
-    depth = 4
-    moves = find_all_moves(pieces)
-    if computer
-      best_move = -9999
-      pieces = board.grid.flatten.select { |piece| piece.color == @color }
-      moves.each do |move_arr|
-        start = move_arr[0]
-        move_arr[1].each do |move|
-        future = board.dup
-        
-
-
-    else
-      pieces = board.grid.flatten.select { |piece| piece.color != @color }
-    end
-  end
+  # def search_tree_for_move(depth, board, computer)
+  #   if depth == 0
+  #     return evaluate_board(board)
+  #   end
+  #   depth = 4
+  #   moves = find_all_moves(pieces)
+  #   if computer
+  #     best_move = -9999
+  #     pieces = board.grid.flatten.select { |piece| piece.color == @color }
+  #     moves.each do |move_arr|
+  #       start = move_arr[0]
+  #       move_arr[1].each do |move|
+  #       future = board.dup
+  #
+  #
+  #
+  #   else
+  #     pieces = board.grid.flatten.select { |piece| piece.color != @color }
+  #   end
+  # end
 
   def calculate_best_move(moves)
     x = @board.in_check?(@color)

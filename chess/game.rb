@@ -7,7 +7,9 @@ class ChessGame
     @board = Board.new
     @display = Display.new(@board)
     @player1 = HumanPlayer.new("Bobby Fischer", @display, :white)
-    @player2 = ComputerPlayer.new("Garry Kasparov", self, :black, @board, @display)
+    @player2 = HumanPlayer.new("Garry Kasparov", @display, :black)
+    # @player2 = HumanPlayer.new("Garry Kasparov", self, :black, @board, @display)
+
     @active_player = @player1
   end
 

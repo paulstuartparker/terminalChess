@@ -26,8 +26,12 @@ module Steppable
       new_x = x + direction
       new_pos = [new_x, y]
       #TODO: pawn first move
-
-      moves = [new_pos]
+      vertical = new_pos
+      if @board[new_pos].color.nil?
+        moves = [new_pos]
+      else
+        moves = []
+      end
       #check diagonals for capturable
       [-1, 1].each do |dy|
         new_pos = [new_x, y + dy]
@@ -44,7 +48,7 @@ module Steppable
         moves << [new_x, y]
       end
 
-      moves.select { |move| self.valid_move?(move) }
+      moves = moves.select { |move| self.valid_move?(move)}
     end
 
 
