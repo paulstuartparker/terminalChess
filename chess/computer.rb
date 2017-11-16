@@ -50,29 +50,24 @@ class ComputerPlayer
   def calculate_check_moves(moves, threat)
     moves.select { |move| move[1].include?(threat)}
   end
-
-  # def search_tree_for_move(depth, board, computer)
-  #   if depth == 0
-  #     return evaluate_board(board)
+  #
+  # def minimaxRoot(depth, board, isMax)
+  #   pieces = my_grid.flatten.select { |piece| piece.color == @color }
+  #   all_moves = find_all_moves(pieces)
+  #   x = @board.in_check(@color)
+  #   if x
+  #     all_moves = calculate_check_moves(all_moves, x)
   #   end
-  #   depth = 4
-  #   moves = find_all_moves(pieces)
-  #   if computer
-  #     best_move = -9999
-  #     pieces = board.grid.flatten.select { |piece| piece.color == @color }
-  #     moves.each do |move_arr|
-  #       start = move_arr[0]
-  #       move_arr[1].each do |move|
-  #       future = board.dup
+  #   best_value = -9999
+  #   best_move = nil
+  #   all_moves.each_with_index do |x, idx|
+  #     new_move = x
   #
-  #
-  #
-  #   else
-  #     pieces = board.grid.flatten.select { |piece| piece.color != @color }
   #   end
   # end
 
   def calculate_best_move(moves)
+    isMax = true
     x = @board.in_check?(@color)
     if x
       moves = calculate_check_moves(moves, x)
@@ -80,13 +75,16 @@ class ComputerPlayer
     best_value = -9999
     best_move = nil
     moves.each do |move_arr|
+      # debugger
       start = move_arr[0]
       move_arr[1].each do |move|
-        future = @board.dup
+        future = @board.deep_dup
         future.move_piece!(start, move)
-        boardval = evaluate_board(future)
+        boardval = search_tree_for_move(2, future, -10000, 10000, !isMax)
+        # boardval = evaluate_board(future, @color)
         if (boardval > best_value )
           best_move = [start, move]
+          best_value = boardval
         end
       end
     end
@@ -94,13 +92,59 @@ class ComputerPlayer
     return best_move
 
   end
+  def search_tree_for_move(depth, board, alpha, beta, isMax)
+    color = isMax == true ? :black : :white
+    if depth == 0
+      return evaluate_board(board, color)
+    end
+    my_grid = board.grid
+    pieces = my_grid.flatten.select { |piece| piece.color == color }
+    moves = find_all_moves(pieces)
+    if isMax
+      best_move = -9999
+      # pieces = board.grid.flatten.select { |piece| piece.color == @color }
+      moves.each do |move_arr|
+        start = move_arr[0]
+        move_arr[1].each do |move|
+          # future = board.dup
+          future = board.deep_dup
+          future.move_piece!(start, move)
+          best_move = [best_move, search_tree_for_move(depth - 1, future, alpha, beta, !isMax)].max
+          # puts best_move
+          alpha = [alpha, best_move].max
+          if beta <= alpha
+            return best_move
+          end
+        end
+      end
+      return best_move
+    else
+      best_move = 9999
+        moves.each do |move_arr|
+          start = move_arr[0]
+          move_arr[1].each do |move|
+            # future = board.dup
+            future = board.deep_dup
+            future.move_piece!(start, move)
+            best_move = [best_move, search_tree_for_move(depth - 1, future, alpha, beta, !isMax)].min
+            beta = [beta, best_move].min
+            if beta <= alpha
+              return best_move
+            end
+          end
+        end
+      # pieces = board.grid.flatten.select { |piece| piece.color != @color }
+      return best_move
+    end
+  end
 
 
-  def evaluate_board(future)
+
+  def evaluate_board(future, color)
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
     boardval = pieces.reduce(0) do |acc, el|
       # debugger
-      if el.color == @color
+      if el.color == color
         acc += PIECE_VALUES[el.class]
       else
         acc -= PIECE_VALUES[el.class]

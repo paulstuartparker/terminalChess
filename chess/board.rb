@@ -29,6 +29,33 @@ class Board
   end
 
 
+    def deep_dup
+      # new_board = Board.new
+      # grid = []
+      # 0.upto(7) do |row|
+      #   sub_arr = []
+      #   0.upto(7) do |col|
+      #     if self[[row, col]].is_a? NullPiece
+      #       sub_arr << NullPiece.instance
+      #     else
+      #       #
+      #       piece = self[[row, col]]
+      #       piece_class = piece.class
+      #       new_piece = piece_class.new(piece.board, piece.pos, piece.color)
+      #       # new_piece.color = piece.color
+      #       # new_piece.pos = [row, col]
+      #       # new_piece.board = new_board
+      #       sub_arr << new_piece
+      #     end
+      #   end
+      #   grid << sub_arr
+      # end
+      # new_board.grid = grid
+      # new_board
+      new_board = Marshal.load(Marshal.dump(self))
+    end
+
+
 
   def set_rooks
     Rook.new(self, [0,0], :black)
