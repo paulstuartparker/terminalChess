@@ -1,3 +1,4 @@
+require 'byebug'
 class ComputerPlayer
   attr_reader :name, :color
 
@@ -21,7 +22,7 @@ class ComputerPlayer
   def play_turn
     my_grid = @board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == @color }
-    all_moves = find_all_moves(pieces)
+    all_moves = find_all_moves(pieces).shuffle
     move = calculate_best_move(all_moves)
     # move = search_tree_for_move(pieces, 4, @board)
     # move = pick_random_move(all_moves)
@@ -68,38 +69,57 @@ class ComputerPlayer
 
   def calculate_best_move(moves)
     isMax = true
-    x = @board.in_check?(@color)
-    if x
-      moves = calculate_check_moves(moves, x)
+    to_print = nil
+    checked = @board.in_check?(@color)
+    if checked
+      moves = calculate_check_moves(moves, checked)
     end
     best_value = -9999
     best_move = nil
+    this = Time.now
     moves.each do |move_arr|
-      # debugger
       start = move_arr[0]
       move_arr[1].each do |move|
         future = @board.deep_dup
         future.move_piece!(start, move)
         boardval = search_tree_for_move(2, future, -10000, 10000, !isMax)
+
+
+
         # boardval = evaluate_board(future, @color)
         if (boardval > best_value )
           best_move = [start, move]
           best_value = boardval
+
+
+          to_print = best_value
         end
       end
     end
-    # debugger
+     p "this is the best move"
+              p best_value
+    print Time.now - this
     return best_move
 
   end
+
+
   def search_tree_for_move(depth, board, alpha, beta, isMax)
+
     color = isMax == true ? :black : :white
+
     if depth == 0
+      # p evaluate_board(board, color)
+
       return evaluate_board(board, color)
     end
     my_grid = board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == color }
     moves = find_all_moves(pieces)
+    checked = board.in_check?(color)
+    if checked
+      moves = calculate_check_moves(moves, checked)
+    end
     if isMax
       best_move = -9999
       # pieces = board.grid.flatten.select { |piece| piece.color == @color }
@@ -109,10 +129,12 @@ class ComputerPlayer
           # future = board.dup
           future = board.deep_dup
           future.move_piece!(start, move)
-          best_move = [best_move, search_tree_for_move(depth - 1, future, alpha, beta, !isMax)].max
-          # puts best_move
+          future_val = search_tree_for_move(depth - 1, future, alpha, beta, !isMax)
+          best_move = best_move > future_val ? best_move : future_val
+          # puts "\t" * depth + "black: " +  best_move.to_s
           alpha = [alpha, best_move].max
           if beta <= alpha
+
             return best_move
           end
         end
@@ -123,12 +145,15 @@ class ComputerPlayer
         moves.each do |move_arr|
           start = move_arr[0]
           move_arr[1].each do |move|
+
             # future = board.dup
             future = board.deep_dup
             future.move_piece!(start, move)
-            best_move = [best_move, search_tree_for_move(depth - 1, future, alpha, beta, !isMax)].min
+            future_val = search_tree_for_move(depth - 1, future, alpha, beta, !isMax)
+            best_move = best_move < future_val ? best_move : future_val
             beta = [beta, best_move].min
             if beta <= alpha
+            # puts "\t" * depth + "white:" + best_move.to_s
               return best_move
             end
           end
@@ -143,14 +168,14 @@ class ComputerPlayer
   def evaluate_board(future, color)
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
     boardval = pieces.reduce(0) do |acc, el|
-      # debugger
-      if el.color == color
+      #
+      if el.color == :black
         acc += PIECE_VALUES[el.class]
       else
         acc -= PIECE_VALUES[el.class]
       end
     end
-    # debugger
+    #
     return boardval
   end
 end

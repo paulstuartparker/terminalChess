@@ -19,7 +19,7 @@ class Piece
   end
 
   def move_into_check?(end_pos)
-    # debugger
+    #
     future = @board.dup
     future.move_piece!(@pos, end_pos)
     future.in_check?(@color)
