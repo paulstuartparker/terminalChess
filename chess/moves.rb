@@ -47,7 +47,10 @@ module Steppable
         new_x += direction
         newmove = [new_x, y]
         return nil if newmove.nil? || @board.nil?
+        return nil if x.nil? || y.nil?
+        return nil if newmove[0].nil? || newmove[1].nil?
         return nil if @board[newmove].nil?
+        #big bug right here
         moves << [new_x, y] if @board[newmove].color.nil?
       end
 

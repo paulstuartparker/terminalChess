@@ -98,7 +98,7 @@ class Board
     king_pos = color == :black ? @black_king_pos : @white_king_pos
     @grid.any? do |rows|
       rows.any? do |piece|
-        next if piece.class == NullPiece
+        next if piece.class == NullPiece || piece.moves.empty?
         if piece.moves.include?(king_pos)
           return piece.pos
         end
@@ -153,12 +153,17 @@ class Board
   end
 
   def [](pos)
-    # if pos.nil? || pos.empty?
-    #   p pos
-    #   print "nil bug"
-    #   return nil
-    # end
+    if pos.nil? || pos.empty?
+      p pos
+      print "nil bug"
+      return nil
+    end
     x, y = pos
+
+    if @grid.nil? || (x.nil? || y.nil?)
+      print "nil"
+      return nil
+    end
     @grid[x][y]
   end
 
