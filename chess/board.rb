@@ -100,7 +100,6 @@ class Board
       rows.any? do |piece|
         next if piece.class == NullPiece
         if piece.moves.include?(king_pos)
-          
           return piece.pos
         end
       end
@@ -147,7 +146,6 @@ class Board
   end
 
 
-
   def []=(pos, piece)
     x, y = pos
     #TODO: check if theres a piece here and raise accordingly
@@ -155,6 +153,11 @@ class Board
   end
 
   def [](pos)
+    # if pos.nil? || pos.empty?
+    #   p pos
+    #   print "nil bug"
+    #   return nil
+    # end
     x, y = pos
     @grid[x][y]
   end

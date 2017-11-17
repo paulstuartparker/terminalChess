@@ -46,7 +46,9 @@ module Steppable
       if x == 1 || x == 6 #pawn hasn't moved from start row
         new_x += direction
         newmove = [new_x, y]
-        moves << [new_x, y] unless !@board[newmove].color.nil?
+        return nil if newmove.nil? || @board.nil?
+        return nil if @board[newmove].nil?
+        moves << [new_x, y] if @board[newmove].color.nil?
       end
 
       moves = moves.select { |move| self.valid_move?(move)}
