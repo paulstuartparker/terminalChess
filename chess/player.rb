@@ -8,7 +8,7 @@ class HumanPlayer
     @color = color
   end
 
-  def play_turn
+  def play_turn(move_count)
     move = []
     loop do
       puts "#{@color.to_s}'s turn"

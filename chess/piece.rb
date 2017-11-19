@@ -32,6 +32,12 @@ class Piece
     # @name
   end
 
+
+  def capture?(start_pos, end_pos)
+    return false if @board[end_pos].color.nil? || @board[end_pos].color == @board[start_pos].color
+    true
+  end
+
   def inspect
     @name
   end
@@ -43,6 +49,15 @@ class Piece
   def valid_moves
     self.moves.reject{ |move| self.move_into_check?(move) }
   end
+
+  def capture_moves
+    self.valid_moves.select { |move| capture?(@pos, move)}
+  end
+
+  def non_capture
+    self.valid_moves.reject { |move| capture?(@pos, move)}
+  end
+
 end
 
 

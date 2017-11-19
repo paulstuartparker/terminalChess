@@ -10,7 +10,7 @@ class ChessGame
     @player1 = ComputerPlayer.new("Bobby Fischer", self, :white, @board, @display)
     # @player2 = HumanPlayer.new("Garry Kasparov", @display, :black)
     @player2 = ComputerPlayer.new("Garry Kasparov", self, :black, @board, @display)
-
+    @move_count = 0
     @active_player = @player1
   end
 
@@ -18,7 +18,8 @@ class ChessGame
     system("clear")
     until @board.checkmate?(:white) || @board.checkmate?(:black)
       begin
-        pos = @active_player.play_turn
+        @move_count += 1
+        pos = @active_player.play_turn(@move_count)
         if pos.nil?
           print "checkmate" || pos.empty?
           break
@@ -30,7 +31,9 @@ class ChessGame
         end
         @board.move_piece(start_pos, end_pos)
         system "clear"
-        @display.render
+        if @player1.class == HumanPlayer && @player2.class == HumanPlayer
+          @display.render
+        end
         if @board.checkmate?(:white) || @board.checkmate?(:black)
           print "checkmate!"
         end

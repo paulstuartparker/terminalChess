@@ -3,13 +3,136 @@ class ComputerPlayer
   attr_reader :name, :color
 
   PIECE_VALUES = {
-    Pawn => 10,
-    Knight => 30,
-    Bishop => 30,
-    Rook => 50,
-    Queen => 90,
-    King => 900
+    Pawn => 100,
+    Knight => 320,
+    Bishop => 330,
+    Rook => 500,
+    Queen => 900,
+    King => 20000
   }
+
+  WHITE_MOVE_TABLE = {  Pawn =>[[0,  0,  0,  0,  0,  0,  0,  0],
+                    [50, 50, 50, 50, 50, 50, 50, 50],
+                    [10, 10, 20, 30, 30, 20, 10, 10],
+                    [5,  5, 10, 25, 25, 10,  5,  5],
+                    [0,  0,  0, 20, 20,  0,  0,  0],
+                    [5, -5,-10,  0,  0,-10, -5,  5],
+                    [5, 10, 10,-20,-20, 10, 10,  5],
+                    [0,  0,  0,  0,  0,  0,  0,  0]],
+          Knight => [[-50,-40,-30,-30,-30,-30,-40,-50],
+                    [-40,-20,  0,  0,  0,  0,-20,-40],
+                    [-30,  0, 10, 15, 15, 10,  0,-30],
+                    [-30,  5, 15, 20, 20, 15,  5,-30],
+                    [-30,  0, 15, 20, 20, 15,  0,-30],
+                    [-30,  5, 10, 15, 15, 10,  5,-30],
+                    [-40,-20,  0,  5,  5,  0,-20,-40],
+                    [-50,-40,-30,-30,-30,-30,-40,-50]],
+          Bishop => [[-20,-10,-10,-10,-10,-10,-10,-20],
+                    [-10,  0,  0,  0,  0,  0,  0,-10],
+                    [-10,  0,  5, 10, 10,  5,  0,-10],
+                    [-10,  5,  5, 10, 10,  5,  5,-10],
+                    [-10,  0, 10, 10, 10, 10,  0,-10],
+                    [-10, 10, 10, 10, 10, 10, 10,-10],
+                    [-10,  5,  0,  0,  0,  0,  5,-10],
+                    [-20,-10,-10,-10,-10,-10,-10,-20]],
+            Rook => [[0,  0,  0,  0,  0,  0,  0,  0],
+                      [5, 10, 10, 10, 10, 10, 10,  5],
+                     [-5,  0,  0,  0,  0,  0,  0, -5],
+                     [-5,  0,  0,  0,  0,  0,  0, -5],
+                     [-5,  0,  0,  0,  0,  0,  0, -5],
+                     [-5,  0,  0,  0,  0,  0,  0, -5],
+                     [-5,  0,  0,  0,  0,  0,  0, -5],
+                    [0,  0,  0,  5,  5,  0,  0,  0]],
+            Queen => [[-20,-10,-10, -5, -5,-10,-10,-20],
+                      [-10,  0,  0,  0,  0,  0,  0,-10],
+                      [-10,  0,  5,  5,  5,  5,  0,-10],
+                       [-5,  0,  5,  5,  5,  5,  0, -5],
+                        [0,  0,  5,  5,  5,  5,  0, -5],
+                      [-10,  5,  5,  5,  5,  5,  0,-10],
+                      [-10,  0,  5,  0,  0,  0,  0,-10],
+                      [-20,-10,-10, -5, -5,-10,-10,-20]]
+                  }
+
+  BLACK_MOVE_TABLE = {  Pawn => [[0,  0,  0,  0,  0,  0,  0,  0],
+                          [5, 10, 10,-20,-20, 10, 10,  5],
+                          [5, -5,-10,  0,  0,-10, -5,  5],
+                          [0,  0,  0, 20, 20,  0,  0,  0],
+                          [5,  5, 10, 25, 25, 10,  5,  5],
+                          [10, 10, 20, 30, 30, 20, 10, 10],
+                          [50, 50, 50, 50, 50, 50, 50, 50],
+                          [0,  0,  0,  0,  0,  0,  0,  0]],
+                Knight => [[-50,-40,-30,-30,-30,-30,-40,-50],
+                          [-40,-20,  0,  5,  5,  0,-20,-40],
+                          [-30,  5, 10, 15, 15, 10,  5,-30],
+                          [-30,  5, 15, 20, 20, 15,  5,-30],
+                          [-30,  0, 15, 20, 20, 15,  0,-30],
+                          [-30,  0, 10, 15, 15, 10,  0,-30],
+                          [-40,-20,  0,  0,  0,  0,-20,-40],
+                          [-50,-40,-30,-30,-30,-30,-40,-50]],
+                Bishop => [[-20,-10,-10,-10,-10,-10,-10,-20],
+                          [-10,  5,  0,  0,  0,  0,  5,-10],
+                          [-10, 10, 10, 10, 10, 10, 10,-10],
+                          [-10,  0, 10, 10, 10, 10,  0,-10],
+                          [-10,  5,  5, 10, 10,  5,  5,-10],
+                          [-10,  0,  5, 10, 10,  5,  0,-10],
+                          [-10,  0,  0,  0,  0,  0,  0,-10],
+                          [-20,-10,-10,-10,-10,-10,-10,-20]],
+                  Rook => [[0,  0,  0,  5,  5,  0,  0,  0],
+                          [-5,  0,  0,  0,  0,  0,  0, -5],
+                          [-5,  0,  0,  0,  0,  0,  0, -5],
+                          [-5,  0,  0,  0,  0,  0,  0, -5],
+                          [-5,  0,  0,  0,  0,  0,  0, -5],
+                          [-5,  0,  0,  0,  0,  0,  0, -5],
+                          [5, 10, 10, 10, 10, 10, 10,  5],
+                          [0,  0,  0,  0,  0,  0,  0,  0]],
+                Queen => [[-20,-10,-10, -5, -5,-10,-10,-20],
+                          [-10,  0,  5,  0,  0,  0,  0,-10],
+                          [-10,  5,  5,  5,  5,  5,  0,-10],
+                         [-5,  0,  5,  5,  5,  5,  0, -5],
+                          [0,  0,  5,  5,  5,  5,  0, -5],
+                          [-10,  0,  5,  5,  5,  5,  0,-10],
+                          [-10,  0,  0,  0,  0,  0,  0,-10],
+                          [-20,-10,-10, -5, -5,-10,-10,-20]]
+                        }
+
+    WHITE_KING_MIDDLE_GAME = [[-30,-40,-40,-50,-50,-40,-40,-30],
+                              [-30,-40,-40,-50,-50,-40,-40,-30],
+                              [-30,-40,-40,-50,-50,-40,-40,-30],
+                              [-30,-40,-40,-50,-50,-40,-40,-30],
+                              [-20,-30,-30,-40,-40,-30,-30,-20],
+                              [-10,-20,-20,-20,-20,-20,-20,-10],
+                               [20, 20,  0,  0,  0,  0, 20, 20],
+                               [20, 30, 10,  0,  0, 10, 30, 20]]
+
+     BLACK_KING_MIDDLE_GAME = [[20, 30, 10,  0,  0, 10, 30, 20],
+                               [20, 20,  0,  0,  0,  0, 20, 20],
+                               [-10,-20,-20,-20,-20,-20,-20,-10],
+                               [-20,-30,-30,-40,-40,-30,-30,-20],
+                               [-30,-40,-40,-50,-50,-40,-40,-30],
+                               [-30,-40,-40,-50,-50,-40,-40,-30],
+                               [-30,-40,-40,-50,-50,-40,-40,-30],
+                               [-30,-40,-40,-50,-50,-40,-40,-30]]
+
+
+    WHITE_KING_END_GAME = [[-50,-40,-30,-20,-20,-30,-40,-50],
+                          [-30,-20,-10,  0,  0,-10,-20,-30],
+                          [-30,-10, 20, 30, 30, 20,-10,-30],
+                          [-30,-10, 30, 40, 40, 30,-10,-30],
+                          [-30,-10, 30, 40, 40, 30,-10,-30],
+                          [-30,-10, 20, 30, 30, 20,-10,-30],
+                          [-30,-30,  0,  0,  0,  0,-30,-30],
+                          [-50,-30,-30,-30,-30,-30,-30,-50]]
+
+    BLACK_KING_END_GAME = [[-50,-30,-30,-30,-30,-30,-30,-50],
+                          [-30,-30,  0,  0,  0,  0,-30,-30],
+                          [-30,-10, 20, 30, 30, 20,-10,-30],
+                          [-30,-10, 30, 40, 40, 30,-10,-30],
+                          [-30,-10, 30, 40, 40, 30,-10,-30],
+                          [-30,-10, 20, 30, 30, 20,-10,-30],
+                          [-30,-20,-10,  0,  0,-10,-20,-30],
+                          [-50,-40,-30,-20,-20,-30,-40,-50]]
+
+
 
   def initialize(name, game, color, board, display)
     @name = name
@@ -20,28 +143,61 @@ class ComputerPlayer
     @display = display
   end
 
-  def play_turn
+  def order_moves_by_value
+
+  end
+
+  attr_reader :move_count
+
+  def play_turn(move_count)
+    @move_count = move_count
     my_grid = @board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == @color }
-    all_moves = find_all_moves(pieces).shuffle
+    if move_count < 8
+      all_moves = find_all_moves(pieces, @board).shuffle
+    else
+      all_moves = find_all_moves(pieces, @board)
+    end
     system("clear")
     @display.render
-    move = calculate_best_move(all_moves)
+    if move_count < 8
+      move = calculate_best_move(all_moves, 1)
+    else
+      move = calculate_best_move(all_moves, 2)
+    end
     # move = search_tree_for_move(pieces, 4, @board)
     # move = pick_random_move(all_moves)
 
     return move
   end
 
+  def capture?(start_pos, end_pos, board)
+    return false if board[end_pos].color.nil? || board[end_pos].color == board[start_pos].color
+    true
+  end
 
-  def find_all_moves(pieces)
+  def capture_moves(color)
+
+  end
+
+  def find_all_moves(pieces, board)
     moves = []
-    pieces.each do |piece|
-      goodmoves = piece.valid_moves
-      moves << [piece.pos, goodmoves]
+    if @move_count < 3
+      pieces = pieces.shuffle
+    else
+      pieces = pieces.sort_by { |piece| PIECE_VALUES[piece.class]}.reverse
     end
-    parsed_moves = moves.select { |move| move[1] != []}
-    return parsed_moves
+    pieces.each do |piece|
+      captures = piece.capture_moves
+      moves << [piece.pos, captures]
+    end
+    pieces.each do |piece|
+      non_captures = piece.non_capture
+      moves << [piece.pos, non_captures]
+    end
+    # parsed_moves = moves.select { |move| move[1] != []}
+    # p parsed_moves
+    return moves
   end
 
   def pick_random_move(moves)
@@ -56,15 +212,16 @@ class ComputerPlayer
     moves.select { |move| move[1].include?(threat) }
   end
   #
+  @board_hash_map = {}
 
-  def calculate_best_move(moves)
-      isMax = true
+  def calculate_best_move(moves, depth)
+    isMax = true
     to_print = nil
     # checked = @board.in_check?(@color)
     # if checked
     #   moves = calculate_check_moves(moves, checked)
     # end
-    best_value = -9999
+    best_value = -99999
     best_move = nil
     this = Time.now
     moves.each do |move_arr|
@@ -72,35 +229,39 @@ class ComputerPlayer
       move_arr[1].each do |move|
         future = @board.deep_dup
         future.move_piece!(start, move)
-        boardval = search_tree_for_move(1, future, -10000, 10000, !isMax)
-
-
-
+        boardval = search_tree_for_move(depth, future, -100000, 100000, !isMax)
         # boardval = evaluate_board(future, @color)
         if (boardval > best_value )
           best_move = [start, move]
           best_value = boardval
-
-
           to_print = best_value
         end
+        # if (Time.now - this) > depth * 7
+        #   p "this is the best move"
+        #   p @color
+        #   p best_value
+        #  print Time.now - this
+        #  @board_hash_map = {}
+        #   return best_move
+        # end
       end
     end
      p "this is the best move"
      p @color
      p best_value
     print Time.now - this
-    if best_value >= -9999 || best_value <= 9999
+    if best_value >= -99999 || best_value <= 99999
+      @board_hash_map = {}
       return best_move
     else
       if pick_random_move(moves) == nil
         puts "checkmate"
         return nil
       else
+        @board_hash_map = {}
         return pick_random_move(moves)
       end
     end
-
 
   end
 
@@ -109,25 +270,20 @@ class ComputerPlayer
   end
 
   def search_tree_for_move(depth, board, alpha, beta, isMax)
-
     color = isMax == true ? @color : @other_color
     # color = isMax == true ? :black : :white
-
-
     if depth == 0
-      # p evaluate_board(board, color)
       return evaluate_board(board, color)
     end
     my_grid = board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == color }
-    moves = find_all_moves(pieces)
+    moves = find_all_moves(pieces, board)
     if moves.empty?
       return evaluate_board(board, color)
     end
     if isMax
-      best_move = -9999
+      best_move = -99999
       # pieces = board.grid.flatten.select { |piece| piece.color == @color }
-      puts moves
       moves.each do |move_arr|
         # p move_arr
         if move_arr.empty?
@@ -139,11 +295,15 @@ class ComputerPlayer
         move_arr[1].each do |move|
           # future = board.dup
           future = board.deep_dup
-          future.move_piece!(start, move)
-          future_val = search_tree_for_move(depth - 1, future, alpha, beta, !isMax)
-          best_move = best_move > future_val ? best_move : future_val
-          # puts "\t" * depth + "black: " +  best_move.to_s
-          alpha = [alpha, best_move].max
+          if @board_hash_map[future.grid]
+            next
+          else
+            future.move_piece!(start, move)
+            future_val = search_tree_for_move(depth - 1, future, alpha, beta, !isMax)
+            best_move = best_move > future_val ? best_move : future_val
+            # puts "\t" * depth + "black: " +  best_move.to_s
+            alpha = [alpha, best_move].max
+          end
           if beta <= alpha
 
             return best_move
@@ -152,7 +312,7 @@ class ComputerPlayer
       end
       return best_move
     else
-      best_move = 9999
+      best_move = 99999
         moves.each do |move_arr|
           if move_arr.empty?
             val = evaluate_board(board, color)
@@ -185,15 +345,65 @@ class ComputerPlayer
 
   def evaluate_board(future, color)
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
-    boardval = pieces.reduce(0) do |acc, el|
-      #
-      if el.color == @color
-        acc += PIECE_VALUES[el.class]
-      else
-        acc -= PIECE_VALUES[el.class]
+    acc = 0
+    thisboard = future
+    pieces.each do |el|
+        if el.color == @color
+          acc += PIECE_VALUES[el.class]
+        else
+          acc -= PIECE_VALUES[el.class]
+        end
+      if @move_count > 4
+        if el.class != King
+          # debugger
+          if el.color == :white
+            if el.color == @color
+              acc += WHITE_MOVE_TABLE[el.class][el.pos[0]][el.pos[1]]
+            else
+              acc -= WHITE_MOVE_TABLE[el.class][el.pos[0]][el.pos[1]]
+            end
+          else
+            if el.color == @color
+              acc += BLACK_MOVE_TABLE[el.class][el.pos[0]][el.pos[1]]
+            else
+              acc -= BLACK_MOVE_TABLE[el.class][el.pos[0]][el.pos[1]]
+            end
+          end
+        else
+          if el.color == :white
+            if el.color == @color
+              if pieces.count > 8
+                acc += WHITE_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
+              else
+                acc += WHITE_KING_END_GAME[el.pos[0]][el.pos[1]]
+              end
+            else
+              if pieces.count > 8
+                acc -= WHITE_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
+              else
+                acc -= WHITE_KING_END_GAME[el.pos[0]][el.pos[1]]
+              end
+            end
+          else
+            if el.color == @color
+              if pieces.count > 8
+                acc += BLACK_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
+              else
+                acc += BLACK_KING_END_GAME[el.pos[0]][el.pos[1]]
+              end
+            else
+              if pieces.count > 8
+                acc -= BLACK_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
+              else
+                acc -= BLACK_KING_END_GAME[el.pos[0]][el.pos[1]]
+              end
+            end
+          end
+        end
       end
     end
-    #
-    return boardval
+
+    # @board_hash_map[thisboard] = acc
+    return acc
   end
 end

@@ -30,30 +30,9 @@ class Board
 
 
     def deep_dup
-      # new_board = Board.new
-      # grid = []
-      # 0.upto(7) do |row|
-      #   sub_arr = []
-      #   0.upto(7) do |col|
-      #     if self[[row, col]].is_a? NullPiece
-      #       sub_arr << NullPiece.instance
-      #     else
-      #       #
-      #       piece = self[[row, col]]
-      #       piece_class = piece.class
-      #       new_piece = piece_class.new(piece.board, piece.pos, piece.color)
-      #       # new_piece.color = piece.color
-      #       # new_piece.pos = [row, col]
-      #       # new_piece.board = new_board
-      #       sub_arr << new_piece
-      #     end
-      #   end
-      #   grid << sub_arr
-      # end
-      # new_board.grid = grid
-      # new_board
       new_board = Marshal.load(Marshal.dump(self))
     end
+
 
 
 
@@ -112,6 +91,14 @@ class Board
     self.in_check?(color) && my_pieces.all? { |piece| piece.valid_moves.empty? }
   end
 
+  def pawn_promotion?(start_pos, end_pos)
+    if end_pos[0] == 0 || end_pos[0] == 7
+      if self[start_pos].class == Pawn
+        return true
+      end
+    end
+  false
+  end
 
 
   def move_piece(start_pos, end_pos)
@@ -141,8 +128,14 @@ class Board
         @white_king_pos = end_pos
       end
     end
-    self[start_pos].pos = end_pos
-    self[end_pos], self[start_pos] = self[start_pos], null
+    if pawn_promotion?(start_pos, end_pos)
+      color = self[start_pos].color
+      self[start_pos] = null
+      Queen.new(self, end_pos, color)
+    else
+      self[start_pos].pos = end_pos
+      self[end_pos], self[start_pos] = self[start_pos], null
+    end
   end
 
 
@@ -153,17 +146,17 @@ class Board
   end
 
   def [](pos)
-    if pos.nil? || pos.empty?
-      p pos
-      print "nil bug"
-      return nil
-    end
+    # if pos.nil? || pos.empty?
+    #   p pos
+    #   print "nil bug"
+    #   return nil
+    # end
     x, y = pos
 
-    if @grid.nil? || (x.nil? || y.nil?)
-      print "nil"
-      return nil
-    end
+    # if @grid.nil? || (x.nil? || y.nil?)
+    #   print "nil"
+    #   return nil
+    # end
     @grid[x][y]
   end
 
