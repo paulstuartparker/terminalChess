@@ -4,14 +4,14 @@ class ComputerPlayer
 
   PIECE_VALUES = {
     Pawn => 100,
-    Knight => 320,
-    Bishop => 330,
+    Knight => 300,
+    Bishop => 350,
     Rook => 500,
     Queen => 900,
     King => 20000
   }
 
-  WHITE_MOVE_TABLE = {  Pawn =>[[0,  0,  0,  0,  0,  0,  0,  0],
+  WHITE_MOVE_TABLE = {  Pawn =>[[900,  900,  900,  900,  900,  900,  900,  900],
                     [50, 50, 50, 50, 50, 50, 50, 50],
                     [10, 10, 20, 30, 30, 20, 10, 10],
                     [5,  5, 10, 25, 25, 10,  5,  5],
@@ -53,7 +53,7 @@ class ComputerPlayer
                       [-20,-10,-10, -5, -5,-10,-10,-20]]
                   }
 
-  BLACK_MOVE_TABLE = {  Pawn => [[0,  0,  0,  0,  0,  0,  0,  0],
+  BLACK_MOVE_TABLE = {  Pawn => [[900,  900,  900,  900,  900,  900,  900,  900],
                           [5, 10, 10,-20,-20, 10, 10,  5],
                           [5, -5,-10,  0,  0,-10, -5,  5],
                           [0,  0,  0, 20, 20,  0,  0,  0],
@@ -165,20 +165,17 @@ class ComputerPlayer
     else
       move = calculate_best_move(all_moves, 2)
     end
-    # move = search_tree_for_move(pieces, 4, @board)
-    # move = pick_random_move(all_moves)
-
     return move
   end
-
-  def capture?(start_pos, end_pos, board)
-    return false if board[end_pos].color.nil? || board[end_pos].color == board[start_pos].color
-    true
-  end
-
-  def capture_moves(color)
-
-  end
+  #
+  # def capture?(start_pos, end_pos, board)
+  #   return false if board[end_pos].color.nil? || board[end_pos].color == board[start_pos].color
+  #   true
+  # end
+  #
+  # def capture_moves(color)
+  #
+  # end
 
   def find_all_moves(pieces, board)
     moves = []
@@ -187,13 +184,11 @@ class ComputerPlayer
     else
       pieces = pieces.sort_by { |piece| PIECE_VALUES[piece.class]}.reverse
     end
+    captures = []
     pieces.each do |piece|
-      captures = piece.capture_moves
-      moves << [piece.pos, captures]
-    end
-    pieces.each do |piece|
-      non_captures = piece.non_capture
-      moves << [piece.pos, non_captures]
+      # captures << [piece.pos, piece.captu9r0e_moves]
+      # moves << [piece.pos, piece.non_capture]
+      moves << [piece.pos, piece.valid_moves]
     end
     # parsed_moves = moves.select { |move| move[1] != []}
     # p parsed_moves
@@ -236,14 +231,14 @@ class ComputerPlayer
           best_value = boardval
           to_print = best_value
         end
-        # if (Time.now - this) > depth * 7
-        #   p "this is the best move"
-        #   p @color
-        #   p best_value
-        #  print Time.now - this
-        #  @board_hash_map = {}
-        #   return best_move
-        # end
+        if (Time.now - this) > depth * 15
+          p "this is the best move"
+          p @color
+          p best_value
+         print Time.now - this
+         @board_hash_map = {}
+          return best_move
+        end
       end
     end
      p "this is the best move"
@@ -372,13 +367,13 @@ class ComputerPlayer
         else
           if el.color == :white
             if el.color == @color
-              if pieces.count > 8
+              if pieces.count > 12
                 acc += WHITE_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
               else
                 acc += WHITE_KING_END_GAME[el.pos[0]][el.pos[1]]
               end
             else
-              if pieces.count > 8
+              if pieces.count > 12
                 acc -= WHITE_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
               else
                 acc -= WHITE_KING_END_GAME[el.pos[0]][el.pos[1]]
@@ -386,13 +381,13 @@ class ComputerPlayer
             end
           else
             if el.color == @color
-              if pieces.count > 8
+              if pieces.count > 12
                 acc += BLACK_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
               else
                 acc += BLACK_KING_END_GAME[el.pos[0]][el.pos[1]]
               end
             else
-              if pieces.count > 8
+              if pieces.count > 12
                 acc -= BLACK_KING_MIDDLE_GAME[el.pos[0]][el.pos[1]]
               else
                 acc -= BLACK_KING_END_GAME[el.pos[0]][el.pos[1]]
