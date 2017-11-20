@@ -72,7 +72,7 @@ class ComputerPlayer
       move_arr[1].each do |move|
         future = @board.deep_dup
         future.move_piece!(start, move)
-        boardval = search_tree_for_move(1, future, -10000, 10000, !isMax)
+        boardval = search_tree_for_move(2, future, -10000, 10000, !isMax)
 
 
 
@@ -127,7 +127,6 @@ class ComputerPlayer
     if isMax
       best_move = -9999
       # pieces = board.grid.flatten.select { |piece| piece.color == @color }
-      puts moves
       moves.each do |move_arr|
         # p move_arr
         if move_arr.empty?
