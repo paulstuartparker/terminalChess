@@ -43,6 +43,7 @@ module Steppable
           moves << new_pos
         end
       end
+<<<<<<< .merge_file_JOypQ4
       # if x == 1 || x == 6 #pawn hasn't moved from start row
         if x == 1 && self.color == :black
           new_x += direction
@@ -58,6 +59,19 @@ module Steppable
         # return nil if newmove[0].nil? || newmove[1].nil?
         # return nil if @board[newmove].nil?
         #big bug right here
+=======
+      if x == 1 && self.color == :black
+      new_x += direction
+      newmove = [new_x, y]
+      moves << [new_x, y] if @board[newmove].color.nil?
+    elsif x == 6 && self.color == :white
+      new_x += direction
+      newmove = [new_x, y]
+      moves << [new_x, y] if @board[newmove].color.nil?
+    end
+        #big bug right here
+        # moves << [new_x, y] if @board[newmove].color.nil?
+>>>>>>> .merge_file_OnJMJV
 
       moves = moves.select { |move| self.valid_move?(move)}
     end

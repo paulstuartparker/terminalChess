@@ -225,7 +225,14 @@ class ComputerPlayer
       move_arr[1].each do |move|
         future = @board.deep_dup
         future.move_piece!(start, move)
+<<<<<<< .merge_file_sZtCEy
         boardval = search_tree_for_move(depth, future, -100000, 100000, !isMax)
+=======
+        boardval = search_tree_for_move(2, future, -10000, 10000, !isMax)
+
+
+
+>>>>>>> .merge_file_gSEXVY
         # boardval = evaluate_board(future, @color)
         if (boardval > best_value )
           best_move = [start, move]
