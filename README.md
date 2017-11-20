@@ -9,7 +9,7 @@ It may be necessary to run the command 'gem install colorize' as well.
 
 #### The Computer Playing Against Itself!
 
-Currently there is a non-naieve AI implemented using the minimax algorithm and Alpha Beta pruning to speed up the recursive board evaluation function.  It is able to look ahead by three moves and takes roughly 8 seconds to do this calculation, which varies based on the number of moves available as well as what moves it evaluates first.
+Currently there is a functional AI implemented using the minimax algorithm and Alpha Beta pruning to speed up the recursive board evaluation function.  It is able to look ahead by three moves and takes roughly 8 seconds to do this calculation. The time it takes to make this calculation varies based on the number of moves available as well as what moves it evaluates first due to the nature of Alpha Beta pruning.
 
 
 
