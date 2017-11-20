@@ -53,14 +53,14 @@ class ComputerPlayer
                       [-20,-10,-10, -5, -5,-10,-10,-20]]
                   }
 
-  BLACK_MOVE_TABLE = {  Pawn => [[900,  900,  900,  900,  900,  900,  900,  900],
+  BLACK_MOVE_TABLE = {  Pawn => [[0,  0,  0,  0,  0,  0,  0,  0],
                           [5, 10, 10,-20,-20, 10, 10,  5],
                           [5, -5,-10,  0,  0,-10, -5,  5],
                           [0,  0,  0, 20, 20,  0,  0,  0],
                           [5,  5, 10, 25, 25, 10,  5,  5],
                           [10, 10, 20, 30, 30, 20, 10, 10],
                           [50, 50, 50, 50, 50, 50, 50, 50],
-                          [0,  0,  0,  0,  0,  0,  0,  0]],
+                        [900,  900,  900,  900,  900,  900,  900,  900]],
                 Knight => [[-50,-40,-30,-30,-30,-30,-40,-50],
                           [-40,-20,  0,  5,  5,  0,-20,-40],
                           [-30,  5, 10, 15, 15, 10,  5,-30],
@@ -153,14 +153,14 @@ class ComputerPlayer
     @move_count = move_count
     my_grid = @board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == @color }
-    if move_count < 8
+    if move_count < 9
       all_moves = find_all_moves(pieces, @board).shuffle
     else
       all_moves = find_all_moves(pieces, @board)
     end
     system("clear")
     @display.render
-    if move_count < 8
+    if move_count < 9
       move = calculate_best_move(all_moves, 1)
     else
       move = calculate_best_move(all_moves, 2)
@@ -186,13 +186,14 @@ class ComputerPlayer
     end
     captures = []
     pieces.each do |piece|
-      # captures << [piece.pos, piece.captu9r0e_moves]
-      # moves << [piece.pos, piece.non_capture]
-      moves << [piece.pos, piece.valid_moves]
+      captures << [piece.pos, piece.capture_moves]
+      moves << [piece.pos, piece.non_capture]
+      # moves << [piece.pos, piece.valid_moves]
     end
     # parsed_moves = moves.select { |move| move[1] != []}
+    captures.concat(moves)
     # p parsed_moves
-    return moves
+    return captures
   end
 
   def pick_random_move(moves)
@@ -348,7 +349,7 @@ class ComputerPlayer
         else
           acc -= PIECE_VALUES[el.class]
         end
-      if @move_count > 4
+      if @move_count > 400
         if el.class != King
           # debugger
           if el.color == :white
