@@ -6,6 +6,7 @@ To run the game, clone this repository, navigate to the chess folder, and run th
 It may be necessary to run the command 'gem install colorize' as well. 
 
 ![terminal chess](terminalChess/giphy.gif)
+
 #### The Computer Playing Against Itself!
 
 Currently there is a non-naieve AI implemented using the minimax algorithm and Alpha Beta pruning to speed up the recursive board evaluation function.  It is able to look ahead by three moves and takes roughly 8 seconds to do this calculation, which varies based on the number of moves available as well as what moves it evaluates first.
