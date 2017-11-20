@@ -5,7 +5,7 @@ The game logic is implemented using two modules: slideable and steppable, which 
 To run the game, clone this repository, navigate to the chess folder, and run the command 'ruby game.rb'.
 It may be necessary to run the command 'gem install colorize' as well. 
 
-![terminal chess](terminalChess/giphy.gif)
+![terminal chess](giphy.gif)
 
 #### The Computer Playing Against Itself!
 
