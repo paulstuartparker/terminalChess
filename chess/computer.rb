@@ -1,11 +1,12 @@
 require 'byebug'
+require 'ruby-prof'
 class ComputerPlayer
   attr_reader :name, :color
 
   PIECE_VALUES = {
     Pawn => 10,
     Knight => 30,
-    Bishop => 30,
+    Bishop => 35,
     Rook => 50,
     Queen => 90,
     King => 900
@@ -26,6 +27,7 @@ class ComputerPlayer
     all_moves = find_all_moves(pieces).shuffle
     system("clear")
     @display.render
+    RubyProf.start
     move = calculate_best_move(all_moves)
     # move = search_tree_for_move(pieces, 4, @board)
     # move = pick_random_move(all_moves)
@@ -72,7 +74,7 @@ class ComputerPlayer
       move_arr[1].each do |move|
         future = @board.deep_dup
         future.move_piece!(start, move)
-        boardval = search_tree_for_move(2, future, -10000, 10000, !isMax)
+        boardval = search_tree_for_move(1, future, -10000, 10000, !isMax)
 
 
 
@@ -91,6 +93,9 @@ class ComputerPlayer
      p best_value
     print Time.now - this
     if best_value >= -9999 || best_value <= 9999
+      result = RubyProf.stop
+      printer = RubyProf::FlatPrinter.new(result)
+      printer.print(STDOUT)
       return best_move
     else
       if pick_random_move(moves) == nil
