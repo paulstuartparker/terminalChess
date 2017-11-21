@@ -27,7 +27,7 @@ class ComputerPlayer
     all_moves = find_all_moves(pieces).shuffle
     system("clear")
     @display.render
-    RubyProf.start
+    # RubyProf.start
     move = calculate_best_move(all_moves)
     # move = search_tree_for_move(pieces, 4, @board)
     # move = pick_random_move(all_moves)
@@ -93,9 +93,9 @@ class ComputerPlayer
      p best_value
     print Time.now - this
     if best_value >= -9999 || best_value <= 9999
-      result = RubyProf.stop
-      printer = RubyProf::FlatPrinter.new(result)
-      printer.print(STDOUT)
+      # result = RubyProf.stop
+      # printer = RubyProf::FlatPrinter.new(result)
+      # printer.print(STDOUT)
       return best_move
     else
       if pick_random_move(moves) == nil
