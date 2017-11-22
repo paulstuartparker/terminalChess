@@ -30,28 +30,6 @@ class Board
 
 
     def dup
-      # new_board = Board.new
-      # grid = []
-      # 0.upto(7) do |row|
-      #   sub_arr = []
-      #   0.upto(7) do |col|
-      #     if self[[row, col]].is_a? NullPiece
-      #       sub_arr << NullPiece.instance
-      #     else
-      #       #
-      #       piece = self[[row, col]]
-      #       piece_class = piece.class
-      #       new_piece = piece_class.new(piece.board, piece.pos, piece.color)
-      #       # new_piece.color = piece.color
-      #       # new_piece.pos = [row, col]
-      #       # new_piece.board = new_board
-      #       sub_arr << new_piece
-      #     end
-      #   end
-      #   grid << sub_arr
-      # end
-      # new_board.grid = grid
-      # new_board
       new_board = Marshal.load(Marshal.dump(self))
     end
 
@@ -123,27 +101,12 @@ class Board
     raise InvalidMoveError.new("illegal move") unless self[start_pos].valid_moves.include?(end_pos)
     raise InvalidMoveError.new("would move into check") if self[start_pos].move_into_check?(end_pos)
     #TODO once we have pieces implemented: check if move valid
-    # if board[end_pos] is invalid
-    #   raise InvalidMoveError("")
-    # end
+
     self.move_piece!(start_pos, end_pos)
 
   end
 
 #move piece without checking if move is valid
-  # def move_piece!(start_pos, end_pos)
-  #   null = NullPiece.instance
-  #   #
-  #   if self[start_pos].class == King
-  #     if self[start_pos].color == :black
-  #       @black_king_pos = end_pos
-  #     else
-  #       @white_king_pos = end_pos
-  #     end
-  #   end
-  #   self[start_pos].pos = end_pos
-  #   self[end_pos], self[start_pos] = self[start_pos], null
-  # end
 
   def move_piece!(start_pos, end_pos)
     null = NullPiece.instance
@@ -164,7 +127,7 @@ class Board
       self[end_pos], self[start_pos] = self[start_pos], null
     end
   end
-  
+
   def []=(pos, piece)
     x, y = pos
     #TODO: check if theres a piece here and raise accordingly

@@ -27,11 +27,7 @@ module Steppable
       new_x = new_x > 7 ? x : new_x
       new_pos = [new_x, y]
       #TODO: pawn first move
-      vertical = new_pos
-      # if x == 7 && self.color == :black
-      #
-      #
-      # end
+
       if @board[new_pos].color.nil?
         moves = [new_pos]
       else
@@ -68,8 +64,7 @@ module Steppable
           end
         end
       end
-        #big bug right here
-        # moves << [new_x, y] if @board[newmove].color.nil?
+
 
       moves = moves.select { |move| self.valid_move?(move)}
     end
