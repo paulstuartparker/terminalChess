@@ -24,9 +24,14 @@ module Steppable
       x, y = pos
       direction = self.color == :black ? 1 : -1
       new_x = x + direction
+      new_x = new_x > 7 ? x : new_x
       new_pos = [new_x, y]
       #TODO: pawn first move
       vertical = new_pos
+      # if x == 7 && self.color == :black
+      #
+      #
+      # end
       if @board[new_pos].color.nil?
         moves = [new_pos]
       else
@@ -34,7 +39,7 @@ module Steppable
       end
       #check diagonals for capturable
       [-1, 1].each do |dy|
-        new_pos = [new_x, y + dy]
+        new_pos = [new_x, (y + dy)]
         if new_pos.any? { |n| n < 0 || n > 7}
           next
         end
@@ -44,14 +49,25 @@ module Steppable
         end
       end
       if x == 1 && self.color == :black
-      new_x += direction
-      newmove = [new_x, y]
-      moves << [new_x, y] if @board[newmove].color.nil?
-    elsif x == 6 && self.color == :white
-      new_x += direction
-      newmove = [new_x, y]
-      moves << [new_x, y] if @board[newmove].color.nil?
-    end
+        new_x += direction
+        newmove = [new_x, y]
+        moves << [new_x, y] if @board[newmove].color.nil?
+      elsif x == 6 && self.color == :white
+        new_x += direction
+        newmove = [new_x, y]
+        moves << [new_x, y] if @board[newmove].color.nil?
+      end
+
+      if self.color == :black && x == 6
+
+        [-1, 1].each do |dy|
+          new_y = y + dy
+          newpos = [7, dy]
+          if @board[newpos].color == :white
+            moves << newpos
+          end
+        end
+      end
         #big bug right here
         # moves << [new_x, y] if @board[newmove].color.nil?
 

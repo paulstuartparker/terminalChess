@@ -17,7 +17,7 @@ class Board
     end
   end
 
-  def dup
+  def deep_dup
     new_board = Board.new(true)
     @grid.each do |row|
       row.each do |piece|
@@ -29,7 +29,7 @@ class Board
   end
 
 
-    def deep_dup
+    def dup
       # new_board = Board.new
       # grid = []
       # 0.upto(7) do |row|
@@ -131,6 +131,20 @@ class Board
   end
 
 #move piece without checking if move is valid
+  # def move_piece!(start_pos, end_pos)
+  #   null = NullPiece.instance
+  #   #
+  #   if self[start_pos].class == King
+  #     if self[start_pos].color == :black
+  #       @black_king_pos = end_pos
+  #     else
+  #       @white_king_pos = end_pos
+  #     end
+  #   end
+  #   self[start_pos].pos = end_pos
+  #   self[end_pos], self[start_pos] = self[start_pos], null
+  # end
+
   def move_piece!(start_pos, end_pos)
     null = NullPiece.instance
     #
@@ -141,11 +155,16 @@ class Board
         @white_king_pos = end_pos
       end
     end
-    self[start_pos].pos = end_pos
-    self[end_pos], self[start_pos] = self[start_pos], null
+    if pawn_promotion?(start_pos, end_pos)
+      color = self[start_pos].color
+      self[start_pos] = null
+      Queen.new(self, end_pos, color)
+    else
+      self[start_pos].pos = end_pos
+      self[end_pos], self[start_pos] = self[start_pos], null
+    end
   end
-
-
+  
   def []=(pos, piece)
     x, y = pos
     #TODO: check if theres a piece here and raise accordingly
@@ -184,7 +203,14 @@ class Board
     b_str
 
   end
-
+  def pawn_promotion?(start_pos, end_pos)
+    if end_pos[0] == 0 || end_pos[0] == 7
+      if self[start_pos].class == Pawn
+        return true
+      end
+    end
+  false
+  end
 
 
 end
