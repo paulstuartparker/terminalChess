@@ -9,7 +9,7 @@ Currently there is a functional AI implemented using the minimax algorithm and A
 
 #### The Computer Playing Against Itself!
 
-To run the game, clone this repository, navigate to the chess folder, and run the command 'ruby game.rb'.
+To run the game clone this repository, navigate to the chess folder, and run the command 'ruby game.rb'.
 It may be necessary to run the command 'gem install colorize' as well. 
 
 
