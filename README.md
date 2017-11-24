@@ -2,7 +2,7 @@
 
 Terminal Chess is a fully functional command line chess application written in Ruby.
 
-Currently there is a functional AI implemented using the minimax algorithm and Alpha Beta pruning to speed up the recursive board evaluation function.  It is able to look ahead by three moves and takes roughly 8 seconds to do this calculation. The time it takes to make this calculation varies based on the number of moves available as well as what moves it evaluates first due to the nature of Alpha Beta pruning.
+Currently there is a functional AI implemented using the minimax algorithm and Alpha Beta pruning to speed up the recursive board evaluation function.  It takes roughly 1 second to look two moves ahead, and about 8 seconds to look three moves ahead. The time it takes to make this calculation varies from one board position to another and increases or decreases corresponding to the number of moves available as well as what moves it evaluates first due to the nature of Alpha Beta pruning.
 
 
 ![terminal chess](giphy.gif)
