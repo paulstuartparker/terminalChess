@@ -1,7 +1,7 @@
 require 'singleton'
 require_relative 'board'
 require_relative 'moves'
-require 'byebug'
+
 class Piece
 
   attr_reader :board, :color

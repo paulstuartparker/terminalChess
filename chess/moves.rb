@@ -1,4 +1,4 @@
-require "byebug"
+
 module Steppable
   def moves
 
