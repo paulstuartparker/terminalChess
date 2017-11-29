@@ -18,6 +18,7 @@ class ChessGame
 
   def determine_players
     puts "Welcome to terminalChess"
+    puts "Press control + c at any time to quit"
     puts "Enter 1 for computer vs computer"
     puts "Enter 2 for human vs computer"
     puts "Enter 3 for human vs human"
@@ -29,14 +30,26 @@ class ChessGame
     initialize_players(choice, howsmart)
   end
 
-  def determine_intelligence
+  def prompt_intelligence
     system "clear"
     puts "How smart would you like the computer to be?"
     puts "Enter 1 for NOT SMART"
     puts "Enter 2 for Sort of Smart(recommended)"
-    puts "Enter 3 for Smarter(Slower, 5-15 seconds / move depending on board position)"
-    puts "Enter 4 for Smart(Slow!, 12-25+ seconds / move depending on board position - This is Ruby, not C++!)"
+    puts "Enter 3 for Smarter(Slower!, 5-15+ seconds / move depending on board position)"
+    puts "Enter 4 for Smart(Slow!!!, 30+ seconds / move depending on board position - This is Ruby, not C++!)"
     return gets.chomp.to_i
+  end
+
+  def determine_intelligence
+    options = [1, 2, 3, 4]
+    solved = false
+    until solved
+      answer = prompt_intelligence
+      if options.include?(answer)
+        solved = true
+        return answer
+      end
+    end
   end
 
   def initialize_display(choice)
@@ -72,7 +85,8 @@ class ChessGame
       begin
         pos = @active_player.play_turn
         if pos.nil?
-          print "checkmate" || pos.empty?
+          @display.render
+          print "stalemate" || pos.empty?
           break
         else
           start_pos, end_pos = pos[0], pos[1]
@@ -90,10 +104,12 @@ class ChessGame
         end
 
         if @board.checkmate?(:white) || @board.checkmate?(:black)
+          @display.render
           puts "checkmate! #{@active_player.color} wins!"
         end
 
         if self.draw?
+          @display.render
           puts "draw :-|"
         end
 
