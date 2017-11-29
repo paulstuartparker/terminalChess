@@ -93,24 +93,18 @@ class Board
 
 
   def move_piece(start_pos, end_pos)
-    #
     null = NullPiece.instance
     raise InvalidMoveError.new("nothing to move") if self[start_pos].class == NullPiece
-    #
     raise InvalidMoveError.new("start and end are the same") if start_pos == end_pos
     raise InvalidMoveError.new("illegal move") unless self[start_pos].valid_moves.include?(end_pos)
     raise InvalidMoveError.new("would move into check") if self[start_pos].move_into_check?(end_pos)
-    #TODO once we have pieces implemented: check if move valid
-
     self.move_piece!(start_pos, end_pos)
 
   end
 
 #move piece without checking if move is valid
-
   def move_piece!(start_pos, end_pos)
     null = NullPiece.instance
-    #
     if self[start_pos].class == King
       if self[start_pos].color == :black
         @black_king_pos = end_pos
@@ -130,7 +124,6 @@ class Board
 
   def []=(pos, piece)
     x, y = pos
-    #TODO: check if theres a piece here and raise accordingly
     @grid[x][y] = piece
   end
 
@@ -165,7 +158,7 @@ class Board
     end
     b_str
   end
-  
+
   def pawn_promotion?(start_pos, end_pos)
     if end_pos[0] == 0 || end_pos[0] == 7
       if self[start_pos].class == Pawn

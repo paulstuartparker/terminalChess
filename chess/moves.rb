@@ -26,7 +26,6 @@ module Steppable
       new_x = x + direction
       new_x = new_x > 7 ? x : new_x
       new_pos = [new_x, y]
-      #TODO: pawn first move
 
       if @board[new_pos].color.nil?
         moves = [new_pos]
@@ -39,8 +38,7 @@ module Steppable
         if new_pos.any? { |n| n < 0 || n > 7}
           next
         end
-        #
-        unless @board[new_pos].color.nil?# && @board[new_pos].color != self.color
+        unless @board[new_pos].color.nil?
           moves << new_pos
         end
       end

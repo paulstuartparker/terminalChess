@@ -6,12 +6,7 @@ class ChessGame
   def initialize
     system "clear"
     @board = Board.new
-    # @display = Display.new(@board)
     determine_players
-    # @player1 = HumanPlayer.new("Bobby Fischer", @display, :white)
-    # @player1 = ComputerPlayer.new("Bobby Fischer", self, :white, @board, @display)
-    # # @player2 = HumanPlayer.new("Garry Kasparov", @display, :black)
-    # @player2 = ComputerPlayer.new("Garry Kasparov", self, :black, @board, @display)
     @active_player = @player1
     @game_state = {
       boards: [],
@@ -90,7 +85,7 @@ class ChessGame
         @board.move_piece(start_pos, end_pos)
         update_state(@board)
         system "clear"
-        if @player1.class == ComputerPlayer
+        if @player1.class == ComputerPlayer && @player2.class == HumanPlayer
           @display.render
         end
 

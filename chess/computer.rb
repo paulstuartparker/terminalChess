@@ -165,14 +165,12 @@ class ComputerPlayer
   def evaluate_board(future, color)
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
     boardval = pieces.reduce(0) do |acc, el|
-      #
       if el.color == @color
         acc += PIECE_VALUES[el.class]
       else
         acc -= PIECE_VALUES[el.class]
       end
     end
-    #
     return boardval
   end
 end

@@ -18,8 +18,7 @@ class Piece
     self.class.new(board, @pos, @color)
   end
 
-  def move_into_check?(end_pos)
-    #
+  def move_into_check?(end_pos)#
     future = @board.deep_dup
     future.move_piece!(@pos, end_pos)
     future.in_check?(@color)
@@ -29,7 +28,6 @@ class Piece
 
   def to_s
     " #{@unicode} "
-    # @name
   end
 
   def inspect

@@ -22,7 +22,6 @@ class Display
           if @cursor.selected
             background = :red
           else
-            # @cursor_on ? background = :blue : :white
             background = @color
           end
         else
