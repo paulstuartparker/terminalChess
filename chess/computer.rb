@@ -92,10 +92,6 @@ class ComputerPlayer
 
   end
 
-  def no_children?(move_arr)
-    move_arr.empty? || move_arr.nil? ? true : false
-  end
-
   def search_tree_for_move(depth, board, alpha, beta, isMax)
     color = isMax == true ? @color : @other_color
 
