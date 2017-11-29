@@ -59,8 +59,7 @@ class ComputerPlayer
 
 
   def calculate_best_move(moves)
-      isMax = true
-    to_print = nil
+    isMax = true
     best_value = -9999
     best_move = nil
     depth = @depth
@@ -74,7 +73,6 @@ class ComputerPlayer
         if (boardval > best_value )
           best_move = [start, move]
           best_value = boardval
-          to_print = best_value
         end
       end
     end
