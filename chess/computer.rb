@@ -11,20 +11,25 @@ class ComputerPlayer
     King => 900
   }
 
-  def initialize(name, game, color, board, display)
+  def initialize(name, game, color, board, display, depth)
     @name = name
     @game = game
     @color = color
     @board = board
     @other_color = @color == :black ? :white : :black
     @display = display
+    @depth = depth
   end
 
   def play_turn
+    system "clear"
+    puts "#{@color}'s turn"
+    @display.render
     my_grid = @board.grid
     pieces = my_grid.flatten.select { |piece| piece.color == @color }
     all_moves = find_all_moves(pieces).shuffle
     move = calculate_best_move(all_moves)
+    system "clear"
     return move
   end
 
@@ -58,13 +63,14 @@ class ComputerPlayer
     to_print = nil
     best_value = -9999
     best_move = nil
+    depth = @depth
     moves.each do |move_arr|
       start = move_arr[0]
       move_arr[1].each do |move|
         future = @board.deep_dup
         future.move_piece!(start, move)
         #Call minimax algorithm.
-        boardval = search_tree_for_move(1, future, -10000, 10000, !isMax)
+        boardval = search_tree_for_move(depth, future, -10000, 10000, !isMax)
         if (boardval > best_value )
           best_move = [start, move]
           best_value = boardval

@@ -4,8 +4,10 @@ require "colorize"
 
 class Display
   attr_reader :cursor
-  def initialize(board, start_pos=[6,4])
+  def initialize(board, start_pos=[6,4], color)
     @cursor = Cursor.new(start_pos, board)
+    @board = board
+    @color = color
   end
 
   def render
@@ -16,11 +18,12 @@ class Display
     @cursor.board.grid.each_with_index do |row, i|
       print "#{8 - i}  "
       row.each_with_index do |square, j|
-        if [i, j] == @cursor.cursor_pos
+        if [i, j] == @cursor.cursor_pos &&
           if @cursor.selected
             background = :red
           else
-            background = :white
+            # @cursor_on ? background = :blue : :white
+            background = @color
           end
         else
           background = is_white ? :white : :cyan
