@@ -164,8 +164,8 @@ class Board
       b_str += "\n"
     end
     b_str
-
   end
+  
   def pawn_promotion?(start_pos, end_pos)
     if end_pos[0] == 0 || end_pos[0] == 7
       if self[start_pos].class == Pawn
