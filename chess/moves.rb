@@ -43,13 +43,15 @@ module Steppable
         end
       end
       if x == 1 && self.color == :black
+        plus_one = new_x
         new_x += direction
         newmove = [new_x, y]
-        moves << [new_x, y] if @board[newmove].color.nil?
+        moves << [new_x, y] if @board[newmove].color.nil? && moves.include?([plus_one, y])
       elsif x == 6 && self.color == :white
+        plus_one = new_x
         new_x += direction
         newmove = [new_x, y]
-        moves << [new_x, y] if @board[newmove].color.nil?
+        moves << [new_x, y] if @board[newmove].color.nil? && moves.include?([plus_one, y])
       end
 
       if self.color == :black && x == 6

@@ -131,7 +131,6 @@ class ChessGame
   def update_state(board)
     @game_state[:fourfold] = 1
     current_board = Marshal.load(Marshal.dump(board))
-
     @game_state[:boards].each do |game_board|
       if game_board.inspect == board.inspect
         @game_state[:fourfold] += 1
@@ -140,7 +139,7 @@ class ChessGame
 
     @game_state[:boards].push(current_board)
 
-    if current_board.grid.count < 4
+    if current_board.grid.count < 3
       @game_state[:insufficient_material] = true
     end
   end
