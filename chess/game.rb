@@ -35,8 +35,8 @@ class ChessGame
     puts "How smart would you like the computer to be?"
     puts "Enter 1 for NOT SMART"
     puts "Enter 2 for Sort of Smart(recommended)"
-    puts "Enter 3 for Smarter(Slower!, 5-15+ seconds / move depending on board position)"
-    puts "Enter 4 for Smart(Slow!!!, 30+ seconds / move depending on board position - This is Ruby, not C++!)"
+    puts "Enter 3 for Smarter(Slower, 5-15+ seconds / move depending on board position)"
+    puts "Enter 4 for Smart(Slow, 30+ seconds / move depending on board position)"
     return gets.chomp.to_i
   end
 
