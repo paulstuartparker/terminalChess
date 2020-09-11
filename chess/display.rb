@@ -1,6 +1,6 @@
 require_relative "board"
 require_relative "cursor"
-require "colorize"
+require_relative "../../colorize/lib/colorize"
 
 class Display
   attr_reader :cursor
@@ -25,7 +25,7 @@ class Display
             background = @color
           end
         else
-          background = is_white ? :white : :cyan
+          background = is_white ? :white : :black
         end
         is_white = !is_white if j != 7
         print square.to_s.colorize(:background => background)

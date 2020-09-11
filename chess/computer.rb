@@ -33,7 +33,6 @@ class ComputerPlayer
     return move
   end
 
-
   def find_all_moves(pieces)
     moves = []
     pieces.each do |piece|
@@ -56,7 +55,6 @@ class ComputerPlayer
   def calculate_check_moves(moves, threat)
     moves.select { |move| move[1].include?(threat) }
   end
-
 
   def calculate_best_move(moves)
     isMax = true
@@ -86,7 +84,6 @@ class ComputerPlayer
         return pick_random_move(moves)
       end
     end
-
 
   end
 
@@ -153,8 +150,6 @@ class ComputerPlayer
       return best_move
     end
   end
-
-
 
   def evaluate_board(future, color)
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
