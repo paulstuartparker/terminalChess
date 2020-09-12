@@ -30,10 +30,8 @@ class Board
 
 
     def dup
-      new_board = Marshal.load(Marshal.dump(self))
+      Marshal.load(Marshal.dump(self))
     end
-
-
 
   def set_rooks
     Rook.new(self, [0,0], :black)
@@ -74,22 +72,16 @@ class Board
 
   def in_check?(color)
     king_pos = color == :black ? @black_king_pos : @white_king_pos
-    @grid.any? do |rows|
+    grid = self.dup.grid
+    grid.any? do |rows|
       rows.any? do |piece|
         next if piece.class == NullPiece
-        if piece.moves.nil?
-          p '---'
-          p piece
-          p @grid
-          p piece.moves
-          p 'moves^'
-          p piece.moves.nil?
-          p 'nil'
-          p piece.class
-          p '^^^'
+        # !piece.moves || piece.moves.empty?
+        mvs = piece.moves
+        if mvs.nil?
+          next
         end
-        next if piece.moves.empty?
-        if piece.moves.include?(king_pos)
+        if mvs.include?(king_pos)
           return piece.pos
         end
       end
@@ -101,8 +93,6 @@ class Board
     my_pieces = @grid.flatten.select { |piece| piece.color == color }
     self.in_check?(color) && my_pieces.all? { |piece| piece.valid_moves.empty? }
   end
-
-
 
   def move_piece(start_pos, end_pos)
     # null = NullPiece.instance

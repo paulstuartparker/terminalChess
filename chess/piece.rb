@@ -15,12 +15,13 @@ class Piece
 
   def dup(board)
     return self.class.new if self.class == NullPiece
-    self.class.new(board, @pos, @color)
+    self.class.new(board.dup, @pos, @color)
   end
 
   def move_into_check?(end_pos)#
-    future = @board.deep_dup
-    future.move_piece!(@pos, end_pos)
+    future = @board.dup
+    future.move_piece!(Marshal.load(Marshal.dump(@pos)), Marshal.load(Marshal.dump(end_pos)))
+    # p future
     future.in_check?(@color)
   end
 
@@ -37,7 +38,13 @@ class Piece
   end
 
   def valid_moves
-    self.moves.reject{ |move| self.move_into_check?(move) }
+    if self.moves.nil?
+      p self.moves
+      p 'hmm'
+    end
+    mvs = Marshal.load(Marshal.dump(self.moves))
+    p mvs if mvs.nil?
+    mvs.reject{ |move| self.move_into_check?(move) }
   end
 end
 

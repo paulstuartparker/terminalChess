@@ -62,8 +62,9 @@ class ComputerPlayer
   end
 
   def get_best_move(all_moves)
-    chunked = all_moves.each_slice(4).to_a
-
+    chunked = all_moves.each_slice(all_moves.size / 4).to_a
+    p chunked.size
+    p 'ractor ct'
     moves = chunked.map do |m|
       ractor_args = Marshal.dump({ board: @board, moves: m, depth: @depth, color: @color, other_color: @other_color })
       get_val_with_ractor(ractor_args)
@@ -110,6 +111,8 @@ class MoveCalculator
   end
 
   def calculate_best_move(moves, depth, board, color, other_color)
+    # p moves
+    # p 'orig moves'
     isMax = true
     best_value = -9999
     best_move = nil
@@ -117,7 +120,7 @@ class MoveCalculator
     moves.each do |move_arr|
       start = move_arr[0]
       move_arr[1].each do |move|
-        future = board.deep_dup
+        future = board.dup
         future.move_piece!(start, move)
         #Call minimax algorithm.
         boardval = search_tree_for_move(depth, future, -10000, 10000, !isMax, color, other_color)
@@ -141,7 +144,8 @@ class MoveCalculator
 
   def search_tree_for_move(depth, board, alpha, beta, isMax, color1, other_color1)
     color = isMax == true ? color1 : other_color1
-
+    # p depth
+    # p 'depth'
     if depth == 0
       return evaluate_board(board, color, color1)
     end
@@ -164,7 +168,7 @@ class MoveCalculator
         end
         start = move_arr[0]
         move_arr[1].each do |move|
-          future = board.deep_dup
+          future = board.dup
           future.move_piece!(start, move)
           future_val = search_tree_for_move(depth - 1, future, alpha, beta, !isMax, color1, other_color1)
           best_move = best_move > future_val ? best_move : future_val
@@ -187,7 +191,7 @@ class MoveCalculator
         end
         start = move_arr[0]
         move_arr[1].each do |move|
-          future = board.deep_dup
+          future = board.dup
           future.move_piece!(start, move)
           future_val = search_tree_for_move(depth - 1, future, alpha, beta, !isMax, color1, other_color1)
           best_move = best_move < future_val ? best_move : future_val
@@ -212,6 +216,7 @@ class MoveCalculator
       Queen => 90,
       King => 900
     }.freeze
+
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
     boardval = pieces.reduce(0) do |acc, el|
       if el.color == color1

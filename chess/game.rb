@@ -13,7 +13,7 @@ class ChessGame
       fourfold: 1,
       insufficient_material: false
     }
-    @game_state[:boards].push(@board.deep_dup)
+    @game_state[:boards].push(@board.dup)
   end
 
   def determine_players
