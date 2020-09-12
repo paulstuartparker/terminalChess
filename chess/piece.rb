@@ -42,8 +42,11 @@ class Piece
       p self
       p moves
       p self.moves
+      moves = self.moves
+      p 'second try'
+      p moves
     end
-    moves.reject{ |move| self.move_into_check?(move) }
+    self.moves.reject{ |move| self.move_into_check?(move) }
   end
 end
 

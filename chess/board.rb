@@ -78,18 +78,18 @@ class Board
       rows.any? do |piece|
         next if piece.class == NullPiece
         # p piece.class, piece.moves
-        if piece.moves.nil?
-          p 'moves:'
-          p piece.moves
-          p piece.class
-          p piece.move_type
-          p piece.moves
-          p @grid
-          p self
-          p piece.pos
-          p rows
-        end
-        next if piece.moves.empty?
+        # if piece.moves.nil?
+        #   p 'moves:'
+        #   p piece.moves
+        #   p piece.class
+        #   p piece.move_type
+        #   p piece.moves
+        #   p @grid
+        #   p self
+        #   p piece.pos
+        #   p rows
+        # end
+        next if piece.moves && piece.moves.empty?
         if piece.moves.include?(king_pos)
           return piece.pos
         end

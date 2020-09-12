@@ -3,7 +3,9 @@ module Steppable
   def moves
     @moves ||= get_moves
     if @moves.nil?
-      p self
+      p 'wut'
+      p self.class
+      p @moves
     end
     @moves
   end
@@ -13,17 +15,17 @@ module Steppable
       x, y = pos
       arr = [-2,-1,1,2]
       movements = arr.product(arr).reject { |a, b| a.abs == b.abs }
-      moves = movements.map { |a, b| [x+a, y+b] }
+      moves1 = movements.map { |a, b| [x+a, y+b] }
 
-      return moves.select { |move| self.valid_move?(move) }
+      return moves1.select { |move| self.valid_move?(move) }
     end
 
     if self.move_type.include?(:king)
       x, y = pos
       arr = [-1, 0, 1]
       movements = arr.product(arr)
-      moves = movements.map { |a, b| [x+a, y+b] }
-      return moves.select { |move| self.valid_move?(move) }
+      moves1 = movements.map { |a, b| [x+a, y+b] }
+      return moves1.select { |move| self.valid_move?(move) }
     end
 
     if self.move_type.include?(:pawn)
@@ -35,9 +37,9 @@ module Steppable
       new_pos = [new_x, y]
 
       if @board[new_pos].color.nil?
-        moves = [new_pos]
+        moves1 = [new_pos]
       else
-        moves = []
+        moves1 = []
       end
       #check diagonals for capturable
       [-1, 1].each do |dy|
@@ -46,19 +48,19 @@ module Steppable
           next
         end
         unless @board[new_pos].color.nil?
-          moves << new_pos
+          moves1 << new_pos
         end
       end
       if x == 1 && self.color == :black
         plus_one = new_x
         new_x += direction
         newmove = [new_x, y]
-        moves << [new_x, y] if @board[newmove].color.nil? && moves.include?([plus_one, y])
+        moves1 << [new_x, y] if @board[newmove].color.nil? && moves1.include?([plus_one, y])
       elsif x == 6 && self.color == :white
         plus_one = new_x
         new_x += direction
         newmove = [new_x, y]
-        moves << [new_x, y] if @board[newmove].color.nil? && moves.include?([plus_one, y])
+        moves1 << [new_x, y] if @board[newmove].color.nil? && moves1.include?([plus_one, y])
       end
 
       if self.color == :black && x == 6
@@ -67,13 +69,13 @@ module Steppable
           new_y = y + dy
           newpos = [7, dy]
           if @board[newpos].color == :white
-            moves << newpos
+            moves1 << newpos
           end
         end
       end
 
 
-      moves = moves.select { |move| self.valid_move?(move)}
+      moves1 = moves1.select { |move| self.valid_move?(move)}
     end
   end
 end
@@ -89,9 +91,9 @@ module Slideable
 
   def get_moves
 
-    moves = []
+    moves1 = []
     if self.move_type.include?(:diag)
-      #diagonal moves can be (x-n, y-n), (x-n, y+n), (x+n, y-n), (x+n, y+n)
+      #diagonal moves1 can be (x-n, y-n), (x-n, y+n), (x+n, y-n), (x+n, y+n)
 
       [-1, 1].each do |dx|
         [-1, 1].each do |dy|
@@ -101,7 +103,7 @@ module Slideable
             y += dy
             new_pos = [x, y]
             break unless self.valid_move?(new_pos)
-            moves << [x, y]
+            moves1 << [x, y]
             break unless self.board[new_pos].class == NullPiece
           end
         end
@@ -115,7 +117,7 @@ module Slideable
           x += mvmt
           new_pos = [x, y]
           break unless self.valid_move?(new_pos)
-          moves << new_pos
+          moves1 << new_pos
           break unless self.board[new_pos].class == NullPiece
         end
         x = @pos[0]
@@ -123,13 +125,13 @@ module Slideable
           y += mvmt
           new_pos = [x, y]
           break unless self.valid_move?(new_pos)
-          moves << new_pos
+          moves1 << new_pos
           break unless self.board[new_pos].class == NullPiece
         end
       end
     end
 
-    moves.uniq
+    moves1.uniq
   end
 
 end
