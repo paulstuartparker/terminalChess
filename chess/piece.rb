@@ -14,17 +14,15 @@ class Piece
   end
 
   def dup(board)
-    return self if self.class == NullPiece
+    return NullPiece.new if self.class == NullPiece
     self.class.new(board, @pos, @color)
   end
 
-  def move_into_check?(end_pos)#
+  def move_into_check?(end_pos)
     future = @board.deep_dup
     future.move_piece!(@pos, end_pos)
     future.in_check?(@color)
   end
-
-
 
   def to_s
     " #{@unicode} "
@@ -39,7 +37,13 @@ class Piece
   end
 
   def valid_moves
-    self.moves.reject{ |move| self.move_into_check?(move) }
+    moves = self.moves
+    if moves.nil?
+      p self
+      p moves
+      p self.moves
+    end
+    moves.reject{ |move| self.move_into_check?(move) }
   end
 end
 
@@ -82,7 +86,6 @@ class Queen < Piece
   def move_type
     [:hor_vert, :diag]
   end
-
 end
 
 class Knight < Piece
@@ -134,14 +137,14 @@ class Pawn < Piece
 end
 
 
-
-
 class NullPiece < Piece
-  include Singleton
   def initialize
     @unicode = " "
     @name = "_"
     @color = nil
   end
 
+  def moves
+    []
+  end
 end

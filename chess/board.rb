@@ -7,7 +7,7 @@ class Board
   attr_reader :grid
   attr_accessor :black_king_pos, :white_king_pos
   def initialize(empty = false)
-    @grid = Array.new(8) { Array.new(8) { NullPiece.instance } }
+    @grid = Array.new(8) { Array.new(8) { NullPiece.new } }
     unless empty
       set_rooks
       set_knights
@@ -29,9 +29,9 @@ class Board
   end
 
 
-    def dup
-      new_board = Marshal.load(Marshal.dump(self))
-    end
+  def dup
+    new_board = Marshal.load(Marshal.dump(self))
+  end
 
 
 
@@ -76,7 +76,20 @@ class Board
     king_pos = color == :black ? @black_king_pos : @white_king_pos
     @grid.any? do |rows|
       rows.any? do |piece|
-        next if piece.class == NullPiece || piece.moves.empty?
+        next if piece.class == NullPiece
+        # p piece.class, piece.moves
+        if piece.moves.nil?
+          p 'moves:'
+          p piece.moves
+          p piece.class
+          p piece.move_type
+          p piece.moves
+          p @grid
+          p self
+          p piece.pos
+          p rows
+        end
+        next if piece.moves.empty?
         if piece.moves.include?(king_pos)
           return piece.pos
         end
@@ -90,21 +103,18 @@ class Board
     self.in_check?(color) && my_pieces.all? { |piece| piece.valid_moves.empty? }
   end
 
-
-
   def move_piece(start_pos, end_pos)
-    null = NullPiece.instance
+    null = NullPiece.new
     raise InvalidMoveError.new("nothing to move") if self[start_pos].class == NullPiece
     raise InvalidMoveError.new("start and end are the same") if start_pos == end_pos
     raise InvalidMoveError.new("illegal move") unless self[start_pos].valid_moves.include?(end_pos)
     raise InvalidMoveError.new("would move into check") if self[start_pos].move_into_check?(end_pos)
     self.move_piece!(start_pos, end_pos)
-
   end
 
 #move piece without checking if move is valid
   def move_piece!(start_pos, end_pos)
-    null = NullPiece.instance
+    null = NullPiece.new
     if self[start_pos].class == King
       if self[start_pos].color == :black
         @black_king_pos = end_pos
@@ -167,6 +177,4 @@ class Board
     end
   false
   end
-
-
 end

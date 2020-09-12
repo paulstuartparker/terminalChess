@@ -1,7 +1,14 @@
 
 module Steppable
   def moves
+    @moves ||= get_moves
+    if @moves.nil?
+      p self
+    end
+    @moves
+  end
 
+  def get_moves
     if self.move_type.include?(:knight)
       x, y = pos
       arr = [-2,-1,1,2]
@@ -68,18 +75,20 @@ module Steppable
 
       moves = moves.select { |move| self.valid_move?(move)}
     end
-
-
-
-
   end
-
-
 end
 
 module Slideable
-
   def moves
+    @moves ||= get_moves
+    if @moves.nil?
+      p self
+    end
+    @moves
+  end
+
+  def get_moves
+
     moves = []
     if self.move_type.include?(:diag)
       #diagonal moves can be (x-n, y-n), (x-n, y+n), (x+n, y-n), (x+n, y+n)

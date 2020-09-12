@@ -25,7 +25,7 @@ class Display
             background = @color
           end
         else
-          background = is_white ? :white : :black
+          background = is_white ? :lightgrey : :black
         end
         is_white = !is_white if j != 7
         print square.to_s.colorize(:background => background)
