@@ -63,10 +63,9 @@ class ComputerPlayer
 
   def get_best_move(all_moves)
     chunked = all_moves.each_slice(4).to_a
-    p chunked
-    p chunked.size
-    moves = chunked.map do |moves|
-      ractor_args = Marshal.dump({ board: @board, moves: moves, depth: @depth, color: @color, other_color: @other_color })
+
+    moves = chunked.map do |m|
+      ractor_args = Marshal.dump({ board: @board, moves: m, depth: @depth, color: @color, other_color: @other_color })
       get_val_with_ractor(ractor_args)
     end
 
@@ -212,7 +211,7 @@ class MoveCalculator
       Rook => 50,
       Queen => 90,
       King => 900
-    }
+    }.freeze
     pieces = future.grid.flatten.reject { |piece| piece.color == nil }
     boardval = pieces.reduce(0) do |acc, el|
       if el.color == color1
